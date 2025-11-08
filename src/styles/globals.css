@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Oriya MN";
+  src: url("/fonts/oriya-mn-regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Imperator";
+  src: url("/fonts/Imperator.ttf") format("truetype");
+}
+/* Rimuovi l'importazione di Tailwind, che è già gestita dal build */
+body {
+  /*font-family: 'Civane Norm Regular', sans-serif; */
+  /*font-family: "Imperator", sans-serif;*/
+  font-family: 'Civane Norm Regular', sans-serif; 
+}
+
+.titoloSection {
+  font-family: "Imperator", sans-serif;
+  font-weight: lighter;
+}
+
+
+
+/* nuovo */
+
+:root {
+  --background: #3c1d59; /* #4f129e */
+  font-family: 'Civane Norm Regular', sans-serif;
+}
+
+body {
+  color: #dbaa5f;
+  background: var(--background);                                         
+}
+.rotate-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background:  #2a0a38;
+  color: #dbaa5f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 22px;
+  font-family: "Civane Norm Regular", sans-serif;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.rotate-text {
+  margin-top: 20px;
+  max-width: 80%;
+  font-style: italic;
+  font-size: 18px;
+  opacity: 1;
+}
+
+@media (orientation: landscape) {
+  .rotate-screen {
+    display: none;
+  }
+}
+
+.labelSignature{
+  font-family: 'Civane Norm Regular', sans-serif;
+  font-style: oblique;
+  transform: skewX(-10deg);
+}
