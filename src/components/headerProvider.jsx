@@ -5,6 +5,7 @@ const HeaderProvider = ({ children }) => {
     const [nome, setNome] = useState("");
     const [colorato, setColorato] = useState(true);
     const [id, setId] = useState("");
+    const [hideHeader, setHideHeader] = useState(false);
 
     const setNomeHeader = (newName) => {
         setNome(newName);
@@ -18,7 +19,7 @@ const HeaderProvider = ({ children }) => {
         setId(id);
     }
     return (
-        <HeaderContext.Provider value={{ nome, setNomeHeader, colorato, setHeaderColorato, id, setHeaderId }}>
+        <HeaderContext.Provider value={{ nome, setNomeHeader, colorato, setHeaderColorato, id, setHeaderId, hideHeader, setHideHeader }}>
             {children}
         </HeaderContext.Provider>
     )

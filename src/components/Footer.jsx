@@ -32,6 +32,13 @@ const Footer = () => {
         >
           Privacy Policy
         </a>
+        {" "}|
+        <a
+          href="/allergeni"
+          className="underline hover:text-white mx-1"
+        >
+          Allergeni
+        </a>
       </span>
     </footer>
   );

@@ -12,11 +12,25 @@ const Header = ({stile}) => {
     const { nome, colorato, id } = useContext(HeaderContext);
     const { getDynamicVh } = useContext(DimensioniContext);
     
-    const handleBack = () => {
-        const currentPath = window.location.pathname;
-        const newPath = currentPath.substring(0, currentPath.lastIndexOf("/")) || "/";
-        router.push(newPath);
-    };
+   const handleBack = () => {
+  // Caso speciale: /menu/lista (anche con hash o query)
+  if (router.pathname === "/menu/lista") {
+    router.push("/menu");
+    return;
+  }
+
+  // Fallback: torna indietro se possibile
+  if (window.history.length > 1) {
+    router.back();
+  } else {
+    // fallback finale: sali di un livello in modo sicuro
+    const segments = router.pathname.split("/").filter(Boolean);
+    segments.pop();
+    const newPath = "/" + segments.join("/");
+
+    router.push(newPath || "/");
+  }
+};
 
     return (
         <header id={id} className={((colorato) ? "bg-[#140d1f] border-b-2 border-[#f1a637] shadow-xl " : "") + stile +" flex w-[100%] items-center justify-between text-white px-4 "}>

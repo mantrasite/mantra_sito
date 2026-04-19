@@ -1,12 +1,10 @@
-// src/pages/index.jsx (o la tua home page)
-import SignatureCocktails from "./signature";
+import MenuExperience from "@/components/MenuExperience";
+import { menuSections, restaurantInfo } from "@/data/menuMobile";
 
-export default function Home() {
+export default function MenuPage() {
   return (
-    <div
-      className={`items-center justify-items-center gap-16 w-screen h-full font-[family-name:var(--font-geist-sans)]`}
-    >
-      <SignatureCocktails />
+    <div className="w-screen h-full">
+      <MenuExperience sections={menuSections} restaurant={restaurantInfo} />
     </div>
   );
 }

@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Reveal from "@/components/Reveal";
 import { IoMdClose } from "react-icons/io";
 import { VscMenu } from "react-icons/vsc";
 import { Link } from "lucide-react";
+import HeaderContext from "@/context/headerContext";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerCtx = useContext(HeaderContext) || {};
+  const setHideHeader = headerCtx.setHideHeader;
 
 
   useEffect(() => {
@@ -17,6 +21,41 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Sync menu open state to body class so other components can react
+  useEffect(() => {
+    try {
+      if (menuOpen) {
+        document.body.classList.add("menu-open");
+      } else {
+        document.body.classList.remove("menu-open");
+      }
+    } catch (e) {
+      // ignore (SSR or restricted env)
+    }
+
+    // ensure body can't scroll when menu is open (fallback for missing CSS)
+    try {
+      document.body.style.overflow = menuOpen ? "hidden" : "";
+    } catch (e) {}
+
+    // inform header context so pages can hide header
+    try {
+      if (typeof setHideHeader === "function") setHideHeader(menuOpen);
+    } catch (e) {}
+
+    return () => {
+      try {
+        document.body.classList.remove("menu-open");
+      } catch (e) {}
+      try {
+        document.body.style.overflow = "";
+      } catch (e) {}
+      try {
+        if (typeof setHideHeader === "function") setHideHeader(false);
+      } catch (e) {}
+    };
+  }, [menuOpen]);
 
   const scrollToSection = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -36,7 +75,7 @@ const Navbar = () => {
     <motion.nav
       className={`h-[6.5vh] fixed cursor-pointer top-0 left-0 w-full z-50 transition-colors flex items-center md:justify-center justify-between  md:px-12 md:py-[2vh] 
         ${menuOpen
-          ? "bg-[#2a0a38]" // se il menu è aperto, sfondo tinta unita
+          ? "bg-transparent" // quando il menu è aperto non mostrare il header scuro
           : isScrolled
             ? "bg-[#4c1c75]/80 backdrop-blur-lg"
             : "bg-transparent"}`}
@@ -64,6 +103,7 @@ const Navbar = () => {
               <a
                 href="/menu"
                 className="text-[#dbaa5f] cursor-pointer text-[1.9vh] hover:text-white transition-colors"
+                onClick={() => setMenuOpen(false)}
               >
                 Menù
               </a>
@@ -138,7 +178,8 @@ const Navbar = () => {
               >
                 <a
                   href="/menu"
-                  className="text-[#dbaa5f] text-lg tracking-wide font-medium px-4 py-2 hover:text-white hover:scale-105 transition-all duration-300 ease-out"
+                    className="text-[#dbaa5f] text-lg tracking-wide font-medium px-4 py-2 hover:text-white hover:scale-105 transition-all duration-300 ease-out"
+                    onClick={() => setMenuOpen(false)}
                 >
                   Menù
                 </a>
