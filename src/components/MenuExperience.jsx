@@ -393,7 +393,7 @@ export default function MenuExperience({ sections, restaurant }) {
 
             <div className="flex flex-col pt-4 items-end gap-2">
               <Image
-                src="/menu/logo_mantra_stretto.svg"
+                src="/menu/logo_mantra_oro.svg"
                 alt="Logo Mantra"
                 width={128}
                 height={128}
