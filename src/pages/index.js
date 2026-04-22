@@ -7,7 +7,7 @@ import Pool from "@/components/Pool";
 import Find_us from "@/components/Find_us";
 import Bar_restaurant from "@/components/Bar_restaurant";
 import Footer from "@/components/Footer";
-import CookieButton from "../components/CookieButton";
+import CookieButton from "@/components/CookieButton";
 import Head from "next/head";
 
 export default function Home() {

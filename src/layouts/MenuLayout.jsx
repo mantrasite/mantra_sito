@@ -2,7 +2,7 @@ import Head from "next/head";
 import Header from "@/components/header";
 import HeaderProvider from "@/components/headerProvider";
 import RotateWarning from "@/components/rotateWarning";
-import CookieButton from "../components/CookieButton";
+import CookieButton from "@/components/CookieButton";
 import DimensioniContext from "@/context/dimensioniContext";
 import { useContext } from "react";
 import { useRouter } from "next/router";
