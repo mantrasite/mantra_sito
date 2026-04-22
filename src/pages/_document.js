@@ -11,11 +11,12 @@ export default function Document() {
           rel="stylesheet"
         />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        {/* Favicon PNG */}
         <link rel="icon" type="image/png" href="/favicon.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <title>Mantra Ristoclub</title>
-        <meta name="description" content="Un&#39;esperienza sensoriale tra gusto e musica" />
+        <meta
+          name="description"
+          content="Un'esperienza sensoriale tra gusto e musica"
+        />
       </Head>
       <body className="antialiased">
         <Main />
