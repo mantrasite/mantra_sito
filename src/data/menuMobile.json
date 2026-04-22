@@ -269,7 +269,7 @@
         },
         {
           "name": "Vegetariano",
-          "description": "Sformatone di verdure fresche di stagione accompagnate con cipolla agrodolce",
+          "description": "Sformatone di verdure fresche di stagione accompagnate con cipolla agrodolce e salsa Mantra",
           "price": "13 €",
           "allergens": [
             3,
@@ -298,7 +298,7 @@
         },
         {
           "name": "Rubino Burger",
-          "description": "Hamburger di manzo con maionese ai lamponi, cipolle caramellate, insalata iceberg e pecorino croccante",
+          "description": "Hamburger di manzo con maionese ai lamponi, cipolle caramellate, insalata iceberg e scaglie di pecorino",
           "price": "13 €",
           "allergens": [
             1,
