@@ -18,7 +18,6 @@ import {
 import { FaFish, FaLeaf, FaPepperHot } from "react-icons/fa";
 
 import { MdOutlineSetMeal } from "react-icons/md";
-import { allergensInfo } from "@/data/menuMobile";
 
 const ALLERGENS_MAP = {
   1: "Glutine",
