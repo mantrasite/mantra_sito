@@ -45,7 +45,7 @@ export default function AdminPage() {
         if (!selectedSection && json.menuSections?.length) setSelectedSection(json.menuSections[0].id);
       } else {
         setAuthOk(false);
-        alert('Credenziali non valide');
+        alert('Credenziali non valideeee');
       }
     } catch (err) {
       console.error(err);
