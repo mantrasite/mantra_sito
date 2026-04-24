@@ -1,4 +1,4 @@
-import { put, get } from "@vercel/blob";
+import { put, get, head } from "@vercel/blob";
 import bcrypt from "bcrypt";
 
 function unauthorized(res) {
@@ -6,14 +6,24 @@ function unauthorized(res) {
   res.status(401).json({ error: "Unauthorized" });
 }
 
+
 async function readData() {
   try {
-    const blob = await get("menu.json");
-    if (!blob) return { menuSections: [] };
+    const blob = await head("menu.json");
 
-    const text = await blob.text();
-    return JSON.parse(text);
+    const response = await fetch(blob.url, {
+      headers: {
+        Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to fetch blob");
+    }
+
+    return await response.json();
   } catch (e) {
+    console.error("READ DATA ERROR:", e);
     return { menuSections: [] };
   }
 }
