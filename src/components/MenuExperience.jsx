@@ -121,7 +121,7 @@ const ALLERGENS_ICONS = {
   ), // Molluschi
 };
 
-export default function MenuExperience({ sections, restaurant }) {
+export default function MenuExperience({ sections, restaurant, allergensInfo }) {
   const [query, setQuery] = useState("");
   const [activeSection, setActiveSection] = useState(sections[0]?.id ?? "");
   const [activeMacroSection, setActiveMacroSection] = useState("menu");
@@ -134,6 +134,12 @@ export default function MenuExperience({ sections, restaurant }) {
   const [hideHeader, setHideHeader] = useState(!!contextHideHeader);
   const [isDesktop, setIsDesktop] = useState(false);
 
+  useEffect(() => {
+    if (sections.length > 0) {
+      setActiveSection(sections[0].id);
+    }
+  }, [sections]);
+  
   function normalizeValue(value) {
     return value.toLowerCase().trim();
   }
