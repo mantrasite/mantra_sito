@@ -104,7 +104,14 @@ useEffect(() => {
           body: JSON.stringify({ sectionId: selectedSection, item }),
         });
         if (res.ok) {
-          await load();
+          setData(prev => {
+  const updated = structuredClone(prev);
+
+  const section = updated.menuSections.find(s => s.id === selectedSection);
+  section.items.push(item);
+
+  return updated;
+});
           setForm({ name: "", description: "", price: "", allergens: "" });
         }
       } else {
@@ -114,7 +121,14 @@ useEffect(() => {
           body: JSON.stringify({ sectionId: selectedSection, index: editIndex, item }),
         });
         if (res.ok) {
-          await load();
+          setData(prev => {
+  const updated = structuredClone(prev);
+
+  const section = updated.menuSections.find(s => s.id === selectedSection);
+  section.items.push(item);
+
+  return updated;
+});
           setForm({ name: "", description: "", price: "", allergens: "" });
           setEditIndex(null);
         }
@@ -132,7 +146,14 @@ useEffect(() => {
         headers: { 'Content-Type': 'application/json', Authorization: authHeader() },
         body: JSON.stringify({ sectionId: selectedSection, index }),
       });
-      if (res.ok) await load();
+      if (res.ok) setData(prev => {
+  const updated = structuredClone(prev);
+
+  const section = updated.menuSections.find(s => s.id === selectedSection);
+  section.items.push(item);
+
+  return updated;
+});
     } catch (e) { console.error(e); }
   };
 
