@@ -147,6 +147,6 @@ export default async function handler(req, res) {
     return res.status(405).end("Method Not Allowed");
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error: " + err.message });
   }
 }
