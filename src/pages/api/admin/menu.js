@@ -1,191 +1,221 @@
-"use client";
+import { put, list, del } from "@vercel/blob";
+import bcrypt from "bcrypt";
 
-import { useEffect, useState } from "react";
+const TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
+const FILE_NAME = "menu.json";
+const BACKUP_PREFIX = "backups/";
 
-export default function AdminPage() {
-  const [menu, setMenu] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [logged, setLogged] = useState(false);
-  const [loading, setLoading] = useState(false);
+// --------------------
+// UTILS
+// --------------------
+async function fetchJSON(url) {
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+      cache: "no-store",
+    },
+  });
 
-  const authHeader = () =>
-    "Basic " + btoa(username + ":" + password);
+  if (!res.ok) throw new Error("Fetch failed");
+  return res.json();
+}
 
-  // ------------------------
-  // LOAD MENU
-  // ------------------------
-  const loadMenu = async () => {
-    try {
-      setLoading(true);
+async function fetchText(url) {
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    },
+  });
 
-      const res = await fetch("/api/admin/menu", {
-        headers: {
-          Authorization: authHeader(),
-        },
-      });
+  if (!res.ok) throw new Error("Fetch failed");
+  return res.text();
+}
 
-      if (!res.ok) throw new Error("Auth error");
+// --------------------
+// READ DATA
+// --------------------
+async function readData() {
+  try {
+    const { blobs } = await list();
+    const file = blobs.find((b) => b.pathname === FILE_NAME);
 
-      const data = await res.json();
-      setMenu(data);
-      setLogged(true);
-    } catch (e) {
-      console.error(e);
-      alert("Credenziali errate");
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (!file) return { menuSections: [] };
 
-  // ------------------------
-  // ADD ITEM
-  // ------------------------
-  const addItem = async (sectionId) => {
-    const name = prompt("Nome piatto:");
-    if (!name) return;
+    return await fetchJSON(file.url);
+  } catch (e) {
+    console.error("READ ERROR:", e);
+    return { menuSections: [] };
+  }
+}
 
-    const newItem = {
-      name,
-      description: "",
-      price: "",
-      allergens: [],
-      badges: [],
-    };
+// --------------------
+// BACKUP
+// --------------------
+async function createBackup() {
+  try {
+    const { blobs } = await list();
+    const file = blobs.find((b) => b.pathname === FILE_NAME);
 
-    await fetch("/api/admin/menu", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authHeader(),
-      },
-      body: JSON.stringify({ sectionId, item: newItem }),
+    if (!file) return;
+
+    const content = await fetchText(file.url);
+
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[:.]/g, "-");
+
+    const backupName = `${BACKUP_PREFIX}menu-${timestamp}.json`;
+
+    await put(backupName, content, {
+      access: "private",
+      token: TOKEN,
     });
 
-    await loadMenu(); // 🔥 refresh automatico
-  };
+    await rotateBackups();
+  } catch (e) {
+    console.warn("BACKUP ERROR:", e.message);
+  }
+}
 
-  // ------------------------
-  // DELETE ITEM
-  // ------------------------
-  const deleteItem = async (sectionId, index) => {
-    if (!confirm("Eliminare?")) return;
+// --------------------
+// ROTATE BACKUPS (max 5)
+// --------------------
+async function rotateBackups() {
+  try {
+    const { blobs } = await list({ prefix: BACKUP_PREFIX });
 
-    await fetch("/api/admin/menu", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authHeader(),
-      },
-      body: JSON.stringify({ sectionId, index }),
-    });
+    if (blobs.length <= 5) return;
 
-    await loadMenu(); // 🔥 refresh automatico
-  };
-
-  // ------------------------
-  // UPDATE ITEM
-  // ------------------------
-  const updateItem = async (sectionId, index, item) => {
-    const newName = prompt("Nuovo nome:", item.name);
-    if (!newName) return;
-
-    const updated = { ...item, name: newName };
-
-    await fetch("/api/admin/menu", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authHeader(),
-      },
-      body: JSON.stringify({ sectionId, index, item: updated }),
-    });
-
-    await loadMenu(); // 🔥 refresh automatico
-  };
-
-  // ------------------------
-  // LOGIN UI
-  // ------------------------
-  if (!logged) {
-    return (
-      <div style={{ padding: 40 }}>
-        <h1>Admin Login</h1>
-
-        <input
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-
-        <br />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <br />
-
-        <button onClick={loadMenu} disabled={loading}>
-          {loading ? "Loading..." : "Login"}
-        </button>
-      </div>
+    const sorted = blobs.sort(
+      (a, b) => new Date(a.uploadedAt) - new Date(b.uploadedAt)
     );
+
+    const toDelete = sorted.slice(0, blobs.length - 5);
+
+    await Promise.all(
+      toDelete.map((file) => del(file.url, { token: TOKEN }))
+    );
+  } catch (e) {
+    console.warn("ROTATE ERROR:", e.message);
+  }
+}
+
+// --------------------
+// WRITE DATA
+// --------------------
+async function writeData(data) {
+  try {
+    await createBackup();
+
+    await put(FILE_NAME, JSON.stringify(data), {
+      access: "private",
+      allowOverwrite: true,
+      token: TOKEN,
+    });
+
+    return true;
+  } catch (e) {
+    console.error("WRITE ERROR:", e);
+    throw e;
+  }
+}
+
+// --------------------
+// AUTH
+// --------------------
+async function checkAuth(req) {
+  const header = req.headers.authorization;
+  if (!header || !header.startsWith("Basic ")) return false;
+
+  try {
+    const [u, p] = Buffer.from(header.split(" ")[1], "base64")
+      .toString()
+      .split(":");
+
+    if (
+      process.env.ADMIN_USERNAME &&
+      process.env.ADMIN_PASSWORD &&
+      u === process.env.ADMIN_USERNAME &&
+      p === process.env.ADMIN_PASSWORD
+    ) {
+      return true;
+    }
+
+    if (
+      process.env.ADMIN_USERNAME &&
+      process.env.ADMIN_PASSWORD_HASH &&
+      u === process.env.ADMIN_USERNAME
+    ) {
+      return await bcrypt.compare(p, process.env.ADMIN_PASSWORD_HASH);
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+// --------------------
+// HANDLER
+// --------------------
+export default async function handler(req, res) {
+  if (!(await checkAuth(req))) {
+    res.setHeader("WWW-Authenticate", 'Basic realm="Admin"');
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
-  // ------------------------
-  // ADMIN UI
-  // ------------------------
-  return (
-    <div style={{ padding: 40 }}>
-      <h1>Admin Menu</h1>
+  try {
+    const data = await readData();
 
-      {!menu && <p>Loading...</p>}
+    if (req.method === "GET") {
+      return res.status(200).json(data);
+    }
 
-      {menu?.menuSections?.map((section) => (
-        <div key={section.id} style={{ marginBottom: 30 }}>
-          <h2>
-            {section.title}{" "}
-            <button onClick={() => addItem(section.id)}>
-              Aggiungi
-            </button>
-          </h2>
+    if (req.method === "POST") {
+      const { sectionId, item } = req.body;
 
-          {section.items.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                border: "1px solid #ccc",
-                padding: 10,
-                marginTop: 5,
-              }}
-            >
-              <b>{item.name}</b>
+      const section = data.menuSections.find((s) => s.id === sectionId);
+      if (!section)
+        return res.status(404).json({ error: "Section not found" });
 
-              <div style={{ marginTop: 5 }}>
-                <button
-                  onClick={() =>
-                    updateItem(section.id, index, item)
-                  }
-                >
-                  Modifica
-                </button>
+      section.items.push(item);
+      await writeData(data);
 
-                <button
-                  onClick={() =>
-                    deleteItem(section.id, index)
-                  }
-                >
-                  Elimina
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
+      return res.status(200).json({ ok: true });
+    }
+
+    if (req.method === "PUT") {
+      const { sectionId, index, item } = req.body;
+
+      const section = data.menuSections.find((s) => s.id === sectionId);
+      if (!section)
+        return res.status(404).json({ error: "Section not found" });
+
+      section.items[index] = item;
+      await writeData(data);
+
+      return res.status(200).json({ ok: true });
+    }
+
+    if (req.method === "DELETE") {
+      const { sectionId, index } = req.body;
+
+      const section = data.menuSections.find((s) => s.id === sectionId);
+      if (!section)
+        return res.status(404).json({ error: "Section not found" });
+
+      section.items.splice(index, 1);
+      await writeData(data);
+
+      return res.status(200).json({ ok: true });
+    }
+
+    res.setHeader("Allow", "GET, POST, PUT, DELETE");
+    return res.status(405).end();
+  } catch (err) {
+    console.error("API ERROR:", err);
+    return res
+      .status(500)
+      .json({ error: "Internal server error: " + err.message });
+  }
 }
