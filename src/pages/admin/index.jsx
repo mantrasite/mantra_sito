@@ -184,15 +184,18 @@ export default function AdminPage() {
       });
 
       if (res.ok) {
-        setData((prev) => {
-          const updated = structuredClone(prev);
-          const section = updated.menuSections.find(
-            (s) => s.id === selectedSection
-          );
-          section.items.splice(index, 1);
-          return updated;
-        });
-      }
+  setData(prev => {
+    const updated = structuredClone(prev);
+
+    const section = updated.menuSections.find(
+      (s) => s.id === selectedSection
+    );
+
+    section.items = section.items.filter((_, i) => i !== index);
+
+    return updated;
+  });
+}
     } catch (e) {
       console.error(e);
     }
