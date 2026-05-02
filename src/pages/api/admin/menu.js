@@ -1,41 +1,118 @@
-import { put, get, head } from "@vercel/blob";
+import { put, head, list, del } from "@vercel/blob";
 import bcrypt from "bcrypt";
+
+const TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
 
 function unauthorized(res) {
   res.setHeader("WWW-Authenticate", 'Basic realm="Admin"');
   res.status(401).json({ error: "Unauthorized" });
 }
 
-
+// --------------------
+// READ DATA
+// --------------------
 async function readData() {
   try {
     const blob = await head("menu.json");
 
     const response = await fetch(blob.url, {
       headers: {
-        Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
     });
 
-    if (!response.ok) {
-      throw new Error("Unable to fetch blob");
-    }
+    if (!response.ok) throw new Error("Fetch failed");
 
     return await response.json();
   } catch (e) {
-    console.error("READ DATA ERROR:", e);
+    console.error("READ ERROR:", e);
     return { menuSections: [] };
   }
 }
 
-async function writeData(data) {
-  await put("menu.json", JSON.stringify(data), {
-    access: "private",
-  });
+// --------------------
+// BACKUP SYSTEM
+// --------------------
+async function createBackup() {
+  try {
+    const blob = await head("menu.json");
 
-  return true;
+    const response = await fetch(blob.url, {
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+
+    const content = await response.text();
+
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[:.]/g, "-");
+
+    const backupName = `backups/menu-${timestamp}.json`;
+
+    await put(backupName, content, {
+      access: "private",
+      token: TOKEN,
+    });
+
+    await rotateBackups();
+  } catch (e) {
+    console.warn("Backup failed:", e.message);
+  }
 }
 
+// --------------------
+// KEEP ONLY 5 BACKUPS
+// --------------------
+async function rotateBackups() {
+  try {
+    const { blobs } = await list({
+      prefix: "backups/",
+    });
+
+    if (blobs.length <= 5) return;
+
+    // ordina per data (più vecchi prima)
+    const sorted = blobs.sort(
+      (a, b) => new Date(a.uploadedAt) - new Date(b.uploadedAt)
+    );
+
+    const toDelete = sorted.slice(0, blobs.length - 5);
+
+    for (const file of toDelete) {
+      await del(file.url, { token: TOKEN });
+    }
+  } catch (e) {
+    console.warn("Rotate backups failed:", e.message);
+  }
+}
+
+// --------------------
+// WRITE DATA
+// --------------------
+async function writeData(data) {
+  try {
+    // 1. backup PRIMA
+    await createBackup();
+
+    // 2. overwrite
+    await put("menu.json", JSON.stringify(data), {
+      access: "private",
+      allowOverwrite: true,
+      token: TOKEN,
+    });
+
+    return true;
+  } catch (e) {
+    console.error("WRITE ERROR:", e);
+    throw e;
+  }
+}
+
+// --------------------
+// AUTH
+// --------------------
 async function checkAuth(req) {
   const header = req.headers.authorization;
   if (!header || !header.startsWith("Basic ")) return false;
@@ -45,7 +122,6 @@ async function checkAuth(req) {
       .toString()
       .split(":");
 
-    // 🔐 Plain auth
     if (
       process.env.ADMIN_USERNAME &&
       process.env.ADMIN_PASSWORD &&
@@ -55,7 +131,6 @@ async function checkAuth(req) {
       return true;
     }
 
-    // 🔐 bcrypt auth (recommended)
     if (
       process.env.ADMIN_USERNAME &&
       process.env.ADMIN_PASSWORD_HASH &&
@@ -65,28 +140,25 @@ async function checkAuth(req) {
     }
 
     return false;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
+// --------------------
+// HANDLER
+// --------------------
 export default async function handler(req, res) {
   if (!(await checkAuth(req))) return unauthorized(res);
 
   try {
-    // GET → leggi menu
     if (req.method === "GET") {
       const data = await readData();
       return res.status(200).json(data);
     }
 
-    // POST → aggiungi item
     if (req.method === "POST") {
       const { sectionId, item } = req.body;
-
-      if (!sectionId || !item) {
-        return res.status(400).json({ error: "Missing sectionId or item" });
-      }
 
       const data = await readData();
       const section = data.menuSections.find((s) => s.id === sectionId);
@@ -101,13 +173,8 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
-    // PUT → update item
     if (req.method === "PUT") {
       const { sectionId, index, item } = req.body;
-
-      if (typeof index !== "number" || !sectionId || !item) {
-        return res.status(400).json({ error: "Missing data" });
-      }
 
       const data = await readData();
       const section = data.menuSections.find((s) => s.id === sectionId);
@@ -122,13 +189,8 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
-    // DELETE → elimina item
     if (req.method === "DELETE") {
       const { sectionId, index } = req.body;
-
-      if (typeof index !== "number" || !sectionId) {
-        return res.status(400).json({ error: "Missing data" });
-      }
 
       const data = await readData();
       const section = data.menuSections.find((s) => s.id === sectionId);
@@ -144,9 +206,11 @@ export default async function handler(req, res) {
     }
 
     res.setHeader("Allow", "GET, POST, PUT, DELETE");
-    return res.status(405).end("Method Not Allowed");
+    return res.status(405).end();
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Internal server error: " + err.message });
+    console.error("API ERROR:", err);
+    return res
+      .status(500)
+      .json({ error: "Internal server error: " + err.message });
   }
 }
