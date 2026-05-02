@@ -4,24 +4,18 @@ export default function AdminPage() {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [authOk, setAuthOk] = useState(false);
-
   const [data, setData] = useState(null);
   const [selectedSection, setSelectedSection] = useState("");
-
   const [form, setForm] = useState({
     name: "",
     description: "",
     price: "",
     allergens: ""
   });
-
   const [editIndex, setEditIndex] = useState(null);
 
   const authHeader = () => "Basic " + btoa(`${user}:${pass}`);
 
-  // -------------------
-  // LOAD DATA
-  // -------------------
   async function load() {
     try {
       const res = await fetch("/api/admin/menu", {
@@ -50,9 +44,6 @@ export default function AdminPage() {
     if (authOk) load();
   }, [authOk]);
 
-  // -------------------
-  // LOGIN
-  // -------------------
   const tryLogin = async (e) => {
     e.preventDefault();
 
@@ -70,16 +61,13 @@ export default function AdminPage() {
           setSelectedSection(json.menuSections[0].id);
         }
       } else {
-        alert("Credenziali non valide");
+        alert("Credenziali non valideeee");
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  // -------------------
-  // SECTION SELECT
-  // -------------------
   const currentSection = data?.menuSections?.find(
     (s) => s.id === selectedSection
   );
@@ -92,9 +80,6 @@ export default function AdminPage() {
     setForm({ name: "", description: "", price: "", allergens: "" });
   };
 
-  // -------------------
-  // EDIT START
-  // -------------------
   const startEdit = (index) => {
     const item = items[index];
 
@@ -108,9 +93,6 @@ export default function AdminPage() {
     setEditIndex(index);
   };
 
-  // -------------------
-  // SUBMIT (ADD / EDIT)
-  // -------------------
   const submit = async (e) => {
     e.preventDefault();
 
@@ -127,7 +109,6 @@ export default function AdminPage() {
     };
 
     try {
-      // ADD
       if (editIndex === null) {
         const res = await fetch("/api/admin/menu", {
           method: "POST",
@@ -144,22 +125,16 @@ export default function AdminPage() {
         if (res.ok) {
           setData((prev) => {
             const updated = structuredClone(prev);
-
             const section = updated.menuSections.find(
               (s) => s.id === selectedSection
             );
-
             section.items.push(item);
-
             return updated;
           });
 
           setForm({ name: "", description: "", price: "", allergens: "" });
         }
-      }
-
-      // EDIT
-      else {
+      } else {
         const res = await fetch("/api/admin/menu", {
           method: "PUT",
           headers: {
@@ -176,13 +151,10 @@ export default function AdminPage() {
         if (res.ok) {
           setData((prev) => {
             const updated = structuredClone(prev);
-
             const section = updated.menuSections.find(
               (s) => s.id === selectedSection
             );
-
             section.items[editIndex] = item;
-
             return updated;
           });
 
@@ -195,9 +167,6 @@ export default function AdminPage() {
     }
   };
 
-  // -------------------
-  // DELETE
-  // -------------------
   const removeItem = async (index) => {
     if (!confirm("Eliminare questa voce?")) return;
 
@@ -217,13 +186,10 @@ export default function AdminPage() {
       if (res.ok) {
         setData((prev) => {
           const updated = structuredClone(prev);
-
           const section = updated.menuSections.find(
             (s) => s.id === selectedSection
           );
-
           section.items.splice(index, 1);
-
           return updated;
         });
       }
@@ -232,99 +198,161 @@ export default function AdminPage() {
     }
   };
 
-  // -------------------
-  // UI
-  // -------------------
   return (
     <div className="min-h-screen bg-background flex items-start justify-center py-4 px-4">
       <div className="w-full max-w-5xl">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-display uppercase" style={{ color: "var(--color-gold)" }}>
+            Admin menu
+          </h1>
+        </div>
 
-        <h1 className="text-2xl mb-4" style={{ color: "var(--color-gold)" }}>
-          Admin menu
-        </h1>
+        <div className="grid grid-cols-1">
+          <div className="col-span-1 mb-3">
+            <div className="bg-white/3 rounded-lg p-6 shadow-md">
+              {!authOk ? (
+                <form onSubmit={tryLogin} className="space-y-4">
+                  <div>
+                    <label className="block text-sm mb-1">Utente</label>
+                    <input
+                      className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white outline-none"
+                      value={user}
+                      onChange={(e) => setUser(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm mb-1">Password</label>
+                    <input
+                      type="password"
+                      className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white outline-none"
+                      value={pass}
+                      onChange={(e) => setPass(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full py-2 cursor-pointer rounded-md"
+                    style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
+                  >
+                    Accedi
+                  </button>
+                </form>
+              ) : (
+                <div className="space-y-3">
+                  <label className="block text-lg mb-3">Sezione</label>
 
-        {/* LOGIN */}
-        {!authOk ? (
-          <form onSubmit={tryLogin} className="space-y-3">
-            <input
-              placeholder="utente"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="password"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-            />
-            <button type="submit">Accedi</button>
-          </form>
-        ) : (
-          <>
-            {/* SELECT SECTION */}
-            <select
-              value={selectedSection}
-              onChange={(e) => onSelectSection(e.target.value)}
-            >
-              {data?.menuSections?.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.title}
-                </option>
-              ))}
-            </select>
-
-            {/* LIST */}
-            <div>
-              {items.map((item, i) => (
-                <div key={i}>
-                  <b>{item.name}</b> - {item.price}
-
-                  <button onClick={() => startEdit(i)}>Edit</button>
-                  <button onClick={() => removeItem(i)}>Delete</button>
+                  <select
+                    className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
+                    value={selectedSection}
+                    onChange={(e) => onSelectSection(e.target.value)}
+                  >
+                    {data?.menuSections?.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.title} — {s.group}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              ))}
+              )}
             </div>
+          </div>
 
-            {/* FORM */}
-            <form onSubmit={submit}>
-              <input
-                value={form.name}
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
-                placeholder="nome"
-              />
+          <div className="col-span-2">
+            {authOk ? (
+              <div className="bg-white/3 rounded-lg p-6 shadow-md">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="mb-3 font-semibold">Voci esistenti</h3>
 
-              <input
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-                placeholder="descrizione"
-              />
+                    <div className="divide-y divide-white/5 max-h-[60vh] overflow-auto">
+                      {items.map((item, i) => (
+                        <div key={i} className="py-3">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <div className="font-medium">
+                                {item.name} <span className="text-white/60">— {item.price}</span>
+                              </div>
+                              <div className="text-sm text-white/60">
+                                {item.description}
+                              </div>
+                              {item.allergens?.length ? (
+                                <div className="text-xs text-white/50 mt-1">
+                                  Allergeni: {item.allergens.join(", ")}
+                                </div>
+                              ) : null}
+                            </div>
 
-              <input
-                value={form.price}
-                onChange={(e) =>
-                  setForm({ ...form, price: e.target.value })
-                }
-                placeholder="prezzo"
-              />
+                            <div className="flex flex-col gap-2 ml-4">
+                              <button onClick={() => startEdit(i)} className="px-3 py-1 cursor-pointer rounded-md text-sm" style={{ background: "rgba(255,255,255,0.04)" }}>
+                                Modifica
+                              </button>
+                              <button onClick={() => removeItem(i)} className="px-3 py-1 cursor-pointer rounded-md text-sm text-red-400">
+                                Elimina
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-              <input
-                value={form.allergens}
-                onChange={(e) =>
-                  setForm({ ...form, allergens: e.target.value })
-                }
-                placeholder="allergeni"
-              />
+                  <div>
+                    <h3 className="mb-3 font-semibold">
+                      {editIndex === null ? "Aggiungi voce" : "Modifica voce"}
+                    </h3>
 
-              <button type="submit">
-                {editIndex === null ? "Aggiungi" : "Salva"}
-              </button>
-            </form>
-          </>
-        )}
+                    <form onSubmit={submit} className="space-y-3">
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        placeholder="Titolo"
+                        required
+                      />
+
+                      <textarea
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={form.description}
+                        onChange={(e) =>
+                          setForm({ ...form, description: e.target.value })
+                        }
+                        placeholder="Descrizione"
+                      />
+
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={form.price}
+                        onChange={(e) => setForm({ ...form, price: e.target.value })}
+                        placeholder="Prezzo"
+                      />
+
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={form.allergens}
+                        onChange={(e) =>
+                          setForm({ ...form, allergens: e.target.value })
+                        }
+                        placeholder="Allergeni"
+                      />
+
+                      <button
+                        type="submit"
+                        className="px-4 py-2 cursor-pointer rounded-md"
+                        style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
+                      >
+                        {editIndex === null ? "Aggiungi" : "Salva"}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white/3 rounded-lg p-6 shadow-md text-white/60">
+                Accedi per modificare il menu.
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
