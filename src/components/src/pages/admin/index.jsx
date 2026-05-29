@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 
 const MACRO_GROUPS = [
   { group: "menuPranzo", label: "Menu Pranzo" },
-  { group: "menu",      label: "Menu Cena"  },
-  { group: "bevande",   label: "Vini"       },
+  { group: "menu",       label: "Menu Cena"   },
+  { group: "bevande",    label: "Vini"        },
 ];
 
 export default function AdminPage() {
-  const [user, setUser]               = useState("danilo");
-  const [pass, setPass]               = useState("danilo");
-  const [authOk, setAuthOk]           = useState(false);
-  const [data, setData]               = useState(null);
-  const [selectedSection, setSelectedSection] = useState("");
-  const [form, setForm]               = useState({ name: "", description: "", price: "", allergens: "" });
-  const [editIndex, setEditIndex]     = useState(null);
+  const [user, setUser]                         = useState("danilo");
+  const [pass, setPass]                         = useState("danilo");
+  const [authOk, setAuthOk]                     = useState(false);
+  const [data, setData]                         = useState(null);
+  const [selectedSection, setSelectedSection]   = useState("");
+  const [form, setForm]                         = useState({ name: "", description: "", price: "", allergens: "" });
+  const [editIndex, setEditIndex]               = useState(null);
 
   const authHeader = () => "Basic " + btoa(`${user}:${pass}`);
 
@@ -35,16 +35,12 @@ export default function AdminPage() {
     e.preventDefault();
     try {
       const res  = await fetch("/api/admin/menu", { headers: { Authorization: authHeader() } });
-      if (res.status === 200) {
-        const json = await res.json();
-        setData(json);
-        setAuthOk(true);
-        if (!selectedSection && json.menuSections?.length)
-          setSelectedSection(json.menuSections[0].id);
-      } else {
-        setAuthOk(false);
-        alert("Credenziali non valide");
-      }
+      if (res.status !== 200) { setAuthOk(false); alert("Credenziali non valide"); return; }
+      const json = await res.json();
+      setData(json);
+      setAuthOk(true);
+      if (!selectedSection && json.menuSections?.length)
+        setSelectedSection(json.menuSections[0].id);
     } catch (err) { console.error(err); }
   };
 
@@ -58,34 +54,30 @@ export default function AdminPage() {
     const section = data.menuSections.find((s) => s.id === selectedSection);
     const item    = section.items[index];
     setForm({
-      name:        item.name        || "",
-      description: item.description || "",
-      price:       item.price       || "",
-      allergens:   (item.allergens  || []).join(","),
+      name:        item.name        ?? "",
+      description: item.description ?? "",
+      price:       item.price       ?? "",
+      allergens:   (item.allergens  ?? []).join(","),
     });
     setEditIndex(index);
   };
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!selectedSection) return alert("Seleziona una sottocategoria");
-
+    if (!selectedSection) return alert("Seleziona una sezione");
     const item = { name: form.name, description: form.description, price: form.price };
     if (form.allergens)
       item.allergens = form.allergens.split(",").map((x) => Number(x.trim())).filter(Boolean);
-
     try {
       const method = editIndex === null ? "POST" : "PUT";
       const body   = editIndex === null
         ? { sectionId: selectedSection, item }
         : { sectionId: selectedSection, index: editIndex, item };
-
       const res = await fetch("/api/admin/menu", {
         method,
         headers: { "Content-Type": "application/json", Authorization: authHeader() },
         body: JSON.stringify(body),
       });
-
       if (res.ok) {
         await load();
         setForm({ name: "", description: "", price: "", allergens: "" });
@@ -118,62 +110,182 @@ export default function AdminPage() {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1">
-          {/* ── Login / Select sezione ── */}
-          <div className="col-span-1 mb-3">
-            <div className="bg-white/3 rounded-lg p-6 shadow-md">
-              {!authOk ? (
-                <form onSubmit={tryLogin} className="space-y-4">
-                  <div>
-                    <label className="block text-sm mb-1">Utente</label>
-                    <input
-                      className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white outline-none"
-                      value={user} onChange={(e) => setUser(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Password</label>
-                    <input
-                      type="password"
-                      className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white outline-none"
-                      value={pass} onChange={(e) => setPass(e.target.value)}
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full py-2 cursor-pointer rounded-md"
-                    style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
-                  >
-                    Accedi
-                  </button>
-                </form>
-              ) : (
+        <div className="grid grid-cols-1 gap-3">
+
+          {/* ── Login / Select ── */}
+          <div className="bg-white/3 rounded-lg p-6 shadow-md">
+            {!authOk ? (
+              <form onSubmit={tryLogin} className="space-y-4">
                 <div>
-                  <label className="block text-lg mb-3">Sezione</label>
-                  <select
-                    className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
-                    value={selectedSection}
-                    onChange={(e) => onSelectSection(e.target.value)}
-                  >
-                    {MACRO_GROUPS.map(({ group, label }) => {
-                      const sections = data?.menuSections?.filter((s) => s.group === group) ?? [];
-                      if (!sections.length) return null;
-                      return (
-                        <optgroup key={group} label={label}>
-                          {sections.map((s) => (
-                            <option key={s.id} value={s.id}>{s.title}</option>
-                          ))}
-                        </optgroup>
-                      );
-                    })}
-                  </select>
+                  <label className="block text-sm mb-1">Utente</label>
+                  <input
+                    className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white outline-none"
+                    value={user} onChange={(e) => setUser(e.target.value)}
+                  />
                 </div>
-              )}
-            </div>
+                <div>
+                  <label className="block text-sm mb-1">Password</label>
+                  <input
+                    type="password"
+                    className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white outline-none"
+                    value={pass} onChange={(e) => setPass(e.target.value)}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-2 cursor-pointer rounded-md"
+                  style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
+                >
+                  Accedi
+                </button>
+              </form>
+            ) : (
+              <div>
+                <label className="block text-lg mb-3">Sezione</label>
+                <select
+                  className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
+                  value={selectedSection}
+                  onChange={(e) => onSelectSection(e.target.value)}
+                >
+                  {MACRO_GROUPS.map(({ group, label }) => {
+                    const secs = data?.menuSections?.filter((s) => s.group === group) ?? [];
+                    if (!secs.length) return null;
+                    return (
+                      <optgroup key={group} label={label}>
+                        {secs.map((s) => (
+                          <option key={s.id} value={s.id}>{s.title}</option>
+                        ))}
+                      </optgroup>
+                    );
+                  })}
+                </select>
+              </div>
+            )}
           </div>
 
-          {/* ── Voci + form ── */}
-          <div className="col-span-2">
-            {authOk ? (
-              <div className="bg-white/3 rounded-lg p-6 shadow-md">
-                <div class
+          {/* ── Voci + Form ── */}
+          {authOk && (
+            <div className="bg-white/3 rounded-lg p-6 shadow-md">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                {/* Lista */}
+                <div>
+                  <h3 className="mb-3 font-semibold">Voci esistenti</h3>
+                  {currentItems.length === 0 ? (
+                    <p className="text-sm text-white/40">Nessuna voce presente.</p>
+                  ) : (
+                    <div className="divide-y divide-white/5 max-h-[60vh] overflow-auto">
+                      {currentItems.map((item, i) => (
+                        <div key={i} className="py-3">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <div className="font-medium">
+                                {item.name}
+                                {item.price ? <span className="text-white/60"> — {item.price}</span> : null}
+                              </div>
+                              {item.description ? (
+                                <div className="text-sm text-white/60">{item.description}</div>
+                              ) : null}
+                              {item.allergens?.length ? (
+                                <div className="text-xs text-white/50 mt-1">
+                                  Allergeni: {item.allergens.join(", ")}
+                                </div>
+                              ) : null}
+                            </div>
+                            <div className="flex flex-col gap-2 ml-4">
+                              <button
+                                onClick={() => startEdit(i)}
+                                className="px-3 py-1 cursor-pointer rounded-md text-sm"
+                                style={{ background: "rgba(255,255,255,0.04)" }}
+                              >
+                                Modifica
+                              </button>
+                              <button
+                                onClick={() => removeItem(i)}
+                                className="px-3 py-1 cursor-pointer rounded-md text-sm text-red-400"
+                              >
+                                Elimina
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Form */}
+                <div>
+                  <h3 className="mb-3 font-semibold">
+                    {editIndex === null ? "Aggiungi voce" : "Modifica voce"}
+                  </h3>
+                  <form onSubmit={submit} className="space-y-3">
+                    <div>
+                      <label className="block text-sm mb-1">Titolo</label>
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={form.name}
+                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-1">Descrizione</label>
+                      <textarea
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={form.description}
+                        onChange={(e) => setForm({ ...form, description: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-1">Prezzo</label>
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={form.price}
+                        onChange={(e) => setForm({ ...form, price: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-1">Allergeni (numeri separati da virgola)</label>
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={form.allergens}
+                        onChange={(e) => setForm({ ...form, allergens: e.target.value })}
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        className="px-4 py-2 cursor-pointer rounded-md"
+                        style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
+                      >
+                        {editIndex === null ? "Aggiungi" : "Salva"}
+                      </button>
+                      {editIndex !== null && (
+                        <button
+                          type="button"
+                          onClick={() => { setEditIndex(null); setForm({ name: "", description: "", price: "", allergens: "" }); }}
+                          className="px-4 py-2 rounded-md"
+                          style={{ background: "rgba(255,255,255,0.04)" }}
+                        >
+                          Annulla
+                        </button>
+                      )}
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {!authOk && (
+            <div className="bg-white/3 rounded-lg p-6 shadow-md text-white/60">
+              Accedi per modificare il menu.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
