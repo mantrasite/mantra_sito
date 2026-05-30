@@ -508,7 +508,7 @@ export default function MenuExperience({ sections, restaurant, allergensInfo }) 
               }
               aria-pressed={activeSection === "apericena-conviviale"}
             >
-              <span>Apericena</span>
+              <span>Apericenaa</span>
             </button>
           ) : null}
 
