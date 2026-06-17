@@ -14,11 +14,11 @@ const SignatureCocktails = () => {
   const path = "/menu/lista#";
 
   const countryCoordinates = {
-    IBIZA: { x: 0.485, y: 0.38 },
-    SICILIA: { x: 0.508, y: 0.38 },
-    BUDAPEST: { x: 0.51, y: 0.35 },
+    IBIZA: { x: 0.485, y: 0.34 },
+    SICILIA: { x: 0.508, y: 0.34 },
+    BUDAPEST: { x: 0.51, y: 0.31 },
     AUSTRALIA: { x: 0.68, y: 0.58 },
-    CARTAGENA: { x: 0.375, y: 0.5 }
+    CARTAGENA: { x: 0.375, y: 0.49 }
   };
 
   useEffect(() => {
