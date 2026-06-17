@@ -91,7 +91,7 @@ const SignatureCocktails = () => {
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
         stile="left-[17vw] cerchio"
-        href={path + "drinkSantaClausVillage"}
+        href={path + "drinkIbiza"}
       >
         SANTA CLAUS VILLAGE
       </Cerchio>
@@ -105,7 +105,7 @@ const SignatureCocktails = () => {
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
         stile="left-[7vw] cerchio"
-        href={path + "drinkToronto"}
+        href={path + "drinkSicilia"}
       >
         TORONTO
       </Cerchio>
@@ -119,7 +119,7 @@ const SignatureCocktails = () => {
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
         stile="left-[7vw] cerchio"
-        href={path + "drinkHawaii"}
+        href={path + "drinkAustralia"}
       >
         HAWAII
       </Cerchio>
@@ -133,7 +133,7 @@ const SignatureCocktails = () => {
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
         stile="left-[17vw] cerchio"
-        href={path + "drinkNewYork"}
+        href={path + "drinkBudapest"}
       >
         NEW YORK
       </Cerchio>
@@ -155,7 +155,7 @@ const SignatureCocktails = () => {
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
         stile="right-[15vw] cerchio"
-        href={path + "drinkMosca"}
+        href={path + "drinkCartagena"}
       >
         MOSCA
       </Cerchio>

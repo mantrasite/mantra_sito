@@ -21,7 +21,7 @@ const drinkMadrid = [
     }
 ];
 
-const drinkSantaClausVillage = [
+const drinkIbiza = [
     {
         "nazione": "SANTA",
         "nome": "Santa Claus Village",
@@ -44,7 +44,7 @@ const drinkSantaClausVillage = [
     }
 ];
 
-const drinkMosca = [
+const drinkCartagena = [
     {
         "nazione": "MOSCA",
         "nome": "Mosca",
@@ -66,7 +66,7 @@ const drinkMosca = [
     }
 ];
 
-const drinkHawaii = [
+const drinkAustralia = [
     {
         "nazione": "HAWAII",
         "nome": "Hawaii",
@@ -88,7 +88,7 @@ const drinkHawaii = [
     }
 ];
 
-const drinkNewYork = [
+const drinkBudapest = [
     {
         "nazione": "NEW YORK",
         "nome": "NewYork",
@@ -111,7 +111,7 @@ const drinkNewYork = [
     }
 ];
 
-const drinkToronto = [
+const drinkSicilia = [
     {
         "nazione": "TORONTO",
         "nome": "Toronto",
@@ -182,4 +182,4 @@ const drinkSeoul = [
 ];
 
 
-export { drinkMadrid, drinkHawaii, drinkNewYork, drinkMosca, drinkSantaClausVillage, drinkToronto, drinkPraga, drinkSeoul };
+export { drinkMadrid, drinkAustralia, drinkBudapest, drinkCartagena, drinkIbiza, drinkSicilia, drinkPraga, drinkSeoul };

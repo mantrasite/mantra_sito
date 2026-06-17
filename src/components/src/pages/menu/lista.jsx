@@ -9,11 +9,11 @@ import "swiper/css/navigation";
 
 import {
   drinkMadrid,
-  drinkMosca,
-  drinkSantaClausVillage,
-  drinkHawaii,
-  drinkToronto,
-  drinkNewYork,
+  drinkCartagena,
+  drinkIbiza,
+  drinkAustralia,
+  drinkSicilia,
+  drinkBudapest,
   drinkPraga,
   drinkSeoul
 } from "@/data/cocktail";
@@ -25,11 +25,11 @@ const Lista_signature = () => {
 
   const ids = [
     "drinkMadrid",
-    "drinkMosca",
-    "drinkSantaClausVillage",
-    "drinkHawaii",
-    "drinkToronto",
-    "drinkNewYork",
+    "drinkCartagena",
+    "drinkIbiza",
+    "drinkAustralia",
+    "drinkSicilia",
+    "drinkBudapest",
     "drinkPraga",
     "drinkSeoul",
   ];
@@ -123,36 +123,36 @@ const Lista_signature = () => {
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkMosca"
-            cocktails={drinkMosca}
+            id="drinkCartagena"
+            cocktails={drinkCartagena}
             label={false}
           />
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkSantaClausVillage"
-            cocktails={drinkSantaClausVillage}
+            id="drinkIbiza"
+            cocktails={drinkIbiza}
             label={false}
           />
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkHawaii"
-            cocktails={drinkHawaii}
+            id="drinkAustralia"
+            cocktails={drinkAustralia}
             label={false}
           />
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkToronto"
-            cocktails={drinkToronto}
+            id="drinkSicilia"
+            cocktails={drinkSicilia}
             label={false}
           />
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkNewYork"
-            cocktails={drinkNewYork}
+            id="drinkBudapest"
+            cocktails={drinkBudapest}
             label={false}
           />
         </SwiperSlide>
