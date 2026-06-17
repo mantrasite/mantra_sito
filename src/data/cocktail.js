@@ -1,185 +1,115 @@
-const drinkMadrid = [
+const drinkIbiza = [
     {
-        "nazione": "MADRID",
-        "nome": "Madrid",
+        "nazione": "IBIZA",
+        "nome": "Ibiza",
         "prezzo": 10,
         "ingredienti": [
-            "Triple sec",
-            "Sciroppo di agave messicano",
-            "Distillato di olive",
-            "Vino rosso Chianti DOC"
+            "Rum infuso alla menta",
+            "Frutto della passione",
+            "Pompelmo rosa",
+            "Essenza di cannella"
         ],
-        "descrizione": "Un cocktail intenso e passionale, come il battito di una notte spagnola. \nIl Triple Sec sprigiona note agrumate e seducenti, lo sciroppo di agave messicano avvolge con la sua dolcezza dorata, mentre il distillato di olive aggiunge un tocco audace e intrigante. \nIl vino rosso Chianti DOC completa il tutto con profondità e calore, creando un equilibrio sensuale tra forza e eleganza. \n Madrid è un brindisi al desiderio — profondo, sofisticato e irresistibilmente mediterraneo. \n",
-        "valutazioni": {
-            "alcool": 3,
-            "citrico": 1,
-            "amaro": 2,
-            "dolce": 4,
-            "fruttato": 1,
-            "speziato": 4
-        }
-    }
-];
-
-const drinkSantaClausVillage = [
-    {
-        "nazione": "SANTA",
-        "nome": "Santa Claus Village",
-        "prezzo": 10,
-        "ingredienti": [
-            "Campari bitter",
-            "Vermouth rosso",
-            "Fonduta di cioccolato",
-            "Liquore bio al cioccolato fondente"
-        ],
-        "descrizione": "Un irresistibile peccato di piacere, nato per sedurre i sensi. \nIl Campari Bitter e il Vermouth rubino creano un preludio elegante e intrigante, mentre la fonduta di cioccolato e il liquore bio al fondente si fondono in un abbraccio caldo e vellutato. \nOgni sorso è un gioco di seduzione tra amaro e dolce, luce e ombra. \nSanta Claus Village è pura tentazione liquida — intensa, sensuale e profondamente avvolgente.",
-        "valutazioni": {
-            "alcool": 3,
-            "citrico": 1,
-            "amaro": 1,
-            "dolce": 4,
-            "fruttato": 2,
-            "speziato": 1
-        }
-    }
-];
-
-const drinkMosca = [
-    {
-        "nazione": "MOSCA",
-        "nome": "Mosca",
-        "prezzo": 10,
-        "ingredienti": [
-            "Altamura vodka",
-            "Cordiale di lampone fresco",
-            "Succo di lime fresco"
-        ],
-        "descrizione": "Un irresistibile peccato di piacere, nato per sedurre i sensi. \nIl Campari Bitter e il Vermouth rubino creano un preludio elegante e intrigante, mentre la fonduta di cioccolato e il liquore bio al fondente si fondono in un abbraccio caldo e vellutato. \nOgni sorso è un gioco di seduzione tra amaro e dolce, luce e ombra. \nSanta Claus Village è pura tentazione liquida — intensa, sensuale e profondamente avvolgente.",
-        "valutazioni": {
-            "alcool": 4,
-            "citrico": 3,
-            "amaro": 0,
-            "dolce": 1,
-            "fruttato": 1,
-            "speziato": 1
-        }
-    }
-];
-
-const drinkHawaii = [
-    {
-        "nazione": "HAWAII",
-        "nome": "Hawaii",
-        "prezzo": 10,
-        "ingredienti": [
-            "Rum bianco infuso con ananas, scorze di lime e cocco",
-            "Rum al cocco",
-            "Dash di miele"
-        ],
-        "descrizione": "Un’esplosione di sensualità tropicale che conquista al primo sorso. \nIl rum bianco infuso con ananas, scorze di lime e cocco sprigiona profumi esotici e solari, mentre il rum al cocco accarezza il palato con la sua morbidezza vellutata. \nUn delicato tocco di miele ne amplifica il piacere, donando una dolcezza avvolgente e irresistibile. \nHawaii è un sogno di mare e passione — un viaggio sensuale tra onde, luce e desiderio.",
-        "valutazioni": {
-            "alcool": 5,
-            "citrico": 3,
-            "amaro": 3,
-            "dolce": 1,
-            "fruttato": 1,
-            "speziato": 3
-        }
-    }
-];
-
-const drinkNewYork = [
-    {
-        "nazione": "NEW YORK",
-        "nome": "NewYork",
-        "prezzo": 10,
-        "ingredienti": [
-            "Wild Turkey Whiskey",
-            "Estratto di mandarino",
-            "Liquore al melone",
-            "Cordiale di mandarino e melone"
-        ],
-        "descrizione": "Audace, sofisticato e sorprendentemente sensuale. \nIl carattere deciso del Wild Turkey Whiskey si intreccia con la luce vibrante dell’estratto di mandarino, mentre il liquore e il cordiale al melone ne avvolgono i toni con una dolce carezza tropicale. \nNew York è un cocktail che incarna lo spirito della metropoli: intenso, elegante e inebriante come una notte a Manhattan.",
+        "descrizione": "Un cocktail fresco, vibrante e irresistibilmente seducente.\n Il rum infuso alla menta regala note aromatiche intense e leggere allo stesso tempo, mentre il frutto della passione avvolge il sorso con una dolcezza tropicale morbida e vellutata.\n Il pompelmo rosa dona brillantezza ed equilibrio, mentre l'essenza di cannella lascia un finale caldo, elegante e memorabile.\n",
         "valutazioni": {
             "alcool": 3,
             "citrico": 2,
-            "amaro": 2,
-            "dolce": 1,
-            "fruttato": 3,
+            "amaro": 1,
+            "dolce": 4,
+            "fruttato": 4,
             "speziato": 2
         }
     }
 ];
 
-const drinkToronto = [
+const drinkCartagena = [
     {
-        "nazione": "TORONTO",
-        "nome": "Toronto",
+        "nazione": "CARTAGENA",
+        "nome": "Cartagena",
         "prezzo": 10,
         "ingredienti": [
-            "Bacardi carta blanca",
-            "Menta liquida",
-            "Cordiale di miele",
-            "Soda al pompelmo rosa",
-            "Estratto di pera"
+            "Blend di distillati bianchi",
+            "Mango tropicale infuso",
+            "Essenze esotiche fruttate"
         ],
-        "descrizione": "Un cocktail dal fascino sottile e irresistibile. \nIl Bacardi Carta Blanca avvolge con la sua eleganza, mentre il cordiale di miele regala morbide sfumature dorate. \nL’estratto di pera aggiunge una dolcezza vellutata, esaltata dalla freschezza vivace della menta liquida e dalla frizzantezza della soda al pompelmo rosa. \nToronto è un sorso raffinato e sensuale, che conquista con la sua armonia tra dolce, fresco e fruttato.",
+        "descrizione": "Un cocktail tropicale dal carattere fresco e travolgente.\nUna selezione di distillati bianchi si unisce in una miscela intensa e cristallina, mentre l'infusione al mango regala una dolcezza esotica morbida e vellutata.\nIl sorso è fresco, vibrante e incredibilmente coinvolgente, con un finale fruttato che lascia il segno dal primo istante.",
         "valutazioni": {
-            "alcool": 5,
-            "citrico": 4,
-            "amaro": 4,
-            "dolce": 3,
-            "fruttato": 2,
+            "alcool": 4,
+            "citrico": 2,
+            "amaro": 1,
+            "dolce": 4,
+            "fruttato": 5,
             "speziato": 1
         }
     }
 ];
 
-const drinkPraga = [
+const drinkAustralia = [
     {
-        "nazione": "PRAGA",
-        "nome": "Praga",
+        "nazione": "AUSTRALIA",
+        "nome": "Australia",
         "prezzo": 10,
         "ingredienti": [
-            "Bacardi carta oro",
-            "Essenza di ananas",
-            "Cordiale di melograno e lampone",
-            "Liquore ai fiori di sambuco"
+            "Gin botanico",
+            "Vodka",
+            "Campari infuso ai frutti rossi",
+            "Vermouth aromatico",
+            "Frutti di bosco maturi"
         ],
-        "descrizione": "Un elisir elegante e misterioso, come una notte tra le luci dorate della città. \nIl Bacardi Carta Oro svela il suo calore ambrato, accarezzato dall’essenza di ananas e dal cordiale di melograno e lampone, intensi e passionali. \nIl liquore ai fiori di sambuco avvolge il tutto in un profumo delicato e sensuale. \nPraga è un cocktail che seduce con grazia e profondità — un incontro tra dolcezza, mistero e fascino irresistibile.",
+        "descrizione": "Un cocktail ribelle e magnetico, dal carattere intenso e sofisticato.\nIl gin botanico e la vodka si fondono con il Campari infuso ai frutti rossi e il vermouth aromatico, creando un sorso profondo, elegante e leggermente speziato.\nLe note di frutti di bosco maturi aggiungono una dolcezza vellutata che rende il drink morbido, coinvolgente e irresistibilmente seducente.",
         "valutazioni": {
             "alcool": 5,
-            "citrico": 4,
-            "amaro": 4,
+            "citrico": 1,
+            "amaro": 3,
             "dolce": 3,
-            "fruttato": 2,
+            "fruttato": 4,
+            "speziato": 2
+        }
+    }
+];
+
+const drinkBudapest = [
+    {
+        "nazione": "BUDAPEST",
+        "nome": "Budapest",
+        "prezzo": 10,
+        "ingredienti": [
+            "Whiskey irlandese",
+            "Essenza di nocciola tostata"
+        ],
+        "descrizione": "Un cocktail intenso e magnetico, dal gusto caldo e sofisticato.\nIl whiskey libera note profonde e avvolgenti, mentre le sfumature di nocciola tostata donano morbidezza ed eleganza al sorso.\nIl finale è vellutato, persistente e incredibilmente seducente, perfetto per chi ama sapori decisi ma raffinati.",
+        "valutazioni": {
+            "alcool": 4,
+            "citrico": 0,
+            "amaro": 2,
+            "dolce": 3,
+            "fruttato": 0,
+            "speziato": 3
+        }
+    }
+];
+
+const drinkSicilia = [
+    {
+        "nazione": "MEDITERRANEO",
+        "nome": "Mediterraneo",
+        "prezzo": 10,
+        "ingredienti": [
+            "Gin infuso agli agrumi",
+            "Lime fresco",
+            "Essenza di limone e pompelmo",
+            "Zucchero"
+        ],
+        "descrizione": "Un sorso luminoso che richiama il calore delle coste italiane e il profumo degli agrumi al tramonto.\nIl gin infuso agli agrumi sprigiona note fresche e intense di limone, accompagnate dalla vivacità del lime e da delicate essenze agrumate.\nLa dolcezza leggera accompagna il finale con eleganza, lasciando una sensazione fresca, raffinata e irresistibilmente estiva.",
+        "valutazioni": {
+            "alcool": 4,
+            "citrico": 5,
+            "amaro": 2,
+            "dolce": 2,
+            "fruttato": 1,
             "speziato": 1
         }
     }
 ];
 
-const drinkSeoul = [
-    {
-        "nazione": "SEOUL",
-        "nome": "Seoul",
-        "prezzo": 10,
-        "ingredienti": [
-            "Altamura vodka",
-            "Purea di maracuja",
-            "St Germain",
-            "Ginger beer"
-        ],
-        "descrizione": "Vibrante, sensuale e sorprendente come una notte d’estate tra le luci della città. \nL’Altamura Vodka dona eleganza e purezza, la polpa di maracuja accende il palato con la sua passione tropicale, mentre lo St-Germain aggiunge una carezza floreale irresistibile. \nLa Ginger Beer chiude con una frizzante nota di carattere. \nSeoul è un’esplosione di fascino e desiderio — un cocktail che seduce con equilibrio, energia e mistero orientale.",
-        "valutazioni": {
-            "alcool": 5,
-            "citrico": 4,
-            "amaro": 4,
-            "dolce": 3,
-            "fruttato": 2,
-            "speziato": 1
-        }
-    }
-];
 
-
-export { drinkMadrid, drinkHawaii, drinkNewYork, drinkMosca, drinkSantaClausVillage, drinkToronto, drinkPraga, drinkSeoul };
+export { drinkAustralia, drinkBudapest, drinkCartagena, drinkIbiza, drinkSicilia };

@@ -14,14 +14,11 @@ const SignatureCocktails = () => {
   const path = "/menu/lista#";
 
   const countryCoordinates = {
-    SANTA: { x: 0.522, y: 0.36 },
-    TORONTO: { x: 0.38, y: 0.43 },
-    NEWYORK: { x: 0.395, y: 0.45 },
-    HAWAII: { x: 0.3, y: 0.45 },
-    MOSCA: { x: 0.56, y: 0.4 },
-    SEOUL: { x: 0.655, y: 0.48 },
-    PRAGA: { x: 0.5, y: 0.44 },
-    MADRID: { x: 0.482, y: 0.47 },
+    IBIZA: { x: 0.485, y: 0.38 },
+    SICILIA: { x: 0.508, y: 0.38 },
+    BUDAPEST: { x: 0.51, y: 0.35 },
+    AUSTRALIA: { x: 0.68, y: 0.58 },
+    CARTAGENA: { x: 0.375, y: 0.5 }
   };
 
   useEffect(() => {
@@ -83,128 +80,86 @@ const SignatureCocktails = () => {
     >
       {/* Cerchi a sinistra */}
       <Cerchio
-        nome="SANTA"
+        nome="IBIZA"
         styleProp={{
           width: `${getDynamicVh(28)}px`,
           height: `${getDynamicVh(28)}px`,
-          top: `${getDynamicVh(0)}px`,
+          bottom: `${getDynamicVh(1)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
-        stile="left-[17vw] cerchio"
-        href={path + "drinkSantaClausVillage"}
+        stile=" cerchio"
+        href={path + "drinkIbiza"}
       >
-        SANTA CLAUS VILLAGE
+        IBIZA
       </Cerchio>
 
       <Cerchio
-        nome="TORONTO"
+        nome="SICILIA"
         styleProp={{
           width: `${getDynamicVh(28)}px`,
           height: `${getDynamicVh(28)}px`,
-          top: `${getDynamicVh(15)}px`,
+          top: `${getDynamicVh(1)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
-        stile="left-[7vw] cerchio"
-        href={path + "drinkToronto"}
+        stile="right-[3vw] cerchio"
+        href={path + "drinkSicilia"}
       >
-        TORONTO
+        SICILIA
       </Cerchio>
 
       <Cerchio
-        nome="HAWAII"
+        nome="AUSTRALIA"
         styleProp={{
           width: `${getDynamicVh(28)}px`,
           height: `${getDynamicVh(28)}px`,
-          bottom: `${getDynamicVh(15)}px`,
+          bottom: `${getDynamicVh(10)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
-        stile="left-[7vw] cerchio"
-        href={path + "drinkHawaii"}
+        stile="right-[3vw] cerchio"
+        href={path + "drinkAustralia"}
       >
-        HAWAII
+        AUSTRALIA
       </Cerchio>
 
       <Cerchio
-        nome="NEWYORK"
+        nome="BUDAPEST"
         styleProp={{
           width: `${getDynamicVh(28)}px`,
           height: `${getDynamicVh(28)}px`,
-          bottom: `${getDynamicVh(0)}px`,
+          top: `${getDynamicVh(1)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
-        stile="left-[17vw] cerchio"
-        href={path + "drinkNewYork"}
+        stile="left-[3vw] cerchio"
+        href={path + "drinkBudapest"}
       >
-        NEW YORK
+        BUDAPEST
       </Cerchio>
 
       {/* Mappa */}
       <img
         src="/menu/mappa_mondo.svg"
         alt="mappa_mondo"
-        className="max-w-[52.5%] z-[-999]"
+        className="max-w-[60%] z-[-999] mb-[10%]"
       />
 
       {/* Cerchi a destra */}
       <Cerchio
-        nome="MOSCA"
+        nome="CARTAGENA"
         styleProp={{
           width: `${getDynamicVh(28)}px`,
           height: `${getDynamicVh(28)}px`,
-          top: `${getDynamicVh(0)}px`,
+          bottom: `${getDynamicVh(10)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
-        stile="right-[15vw] cerchio"
-        href={path + "drinkMosca"}
+        stile="left-[3vw] cerchio"
+        href={path + "drinkCartagena"}
       >
-        MOSCA
-      </Cerchio>
-
-      <Cerchio
-        nome="SEOUL"
-        styleProp={{
-          width: `${getDynamicVh(28)}px`,
-          height: `${getDynamicVh(28)}px`,
-          top: `${getDynamicVh(15)}px`,
-          fontSize: `${getDynamicVh(4.1)}px`,
-        }}
-        stile="right-[5vw] cerchio"
-        href={path + "drinkSeoul"}
-      >
-        SEOUL
-      </Cerchio>
-
-      <Cerchio
-        nome="PRAGA"
-        styleProp={{
-          width: `${getDynamicVh(28)}px`,
-          height: `${getDynamicVh(28)}px`,
-          bottom: `${getDynamicVh(15)}px`,
-          fontSize: `${getDynamicVh(4.1)}px`,
-        }}
-        stile="right-[5vw] cerchio"
-        href={path + "drinkPraga"}
-      >
-        PRAGA
-      </Cerchio>
-
-      <Cerchio
-        nome="MADRID"
-        styleProp={{
-          width: `${getDynamicVh(28)}px`,
-          height: `${getDynamicVh(28)}px`,
-          bottom: `${getDynamicVh(0)}px`,
-          fontSize: `${getDynamicVh(4.1)}px`,
-        }}
-        stile="right-[15vw] cerchio"
-        href={path + "drinkMadrid"}
-      >
-        MADRID
+        CARTAGENA
       </Cerchio>
 
       {/* Linee dinamiche */}
       <svg
-        className="absolute top-0 left-0 w-full h-full pointer-events-none z-50"
+        className="absolute  left-0 w-full h-full pointer-events-none z-50"
         xmlns="http://www.w3.org/2000/svg"
       >
         {lines.map(({ x1, y1, x2, y2 }, index) => (

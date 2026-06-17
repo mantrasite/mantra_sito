@@ -12,7 +12,7 @@ export default function MenuLayout({ Component, pageProps }) {
   const router = useRouter();
 
   const isMenuRoute = !!router.asPath && router.asPath.startsWith("/menu");
-  const isSignatureRoute = !!router.asPath && router.asPath.startsWith("/menu/signature");
+  const isSignatureRoute = !!router.asPath && (router.asPath.startsWith("/menu/signature") || router.asPath.startsWith("/menu/lista"));
 
   return (
     <HeaderProvider>

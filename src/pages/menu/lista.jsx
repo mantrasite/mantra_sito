@@ -9,11 +9,11 @@ import "swiper/css/navigation";
 
 import {
   drinkMadrid,
-  drinkMosca,
-  drinkSantaClausVillage,
-  drinkHawaii,
-  drinkToronto,
-  drinkNewYork,
+  drinkCartagena,
+  drinkIbiza,
+  drinkAustralia,
+  drinkSicilia,
+  drinkBudapest,
   drinkPraga,
   drinkSeoul
 } from "@/data/cocktail";
@@ -24,28 +24,21 @@ const Lista_signature = () => {
   const swiperRef = useRef(null);
 
   const ids = [
-    "drinkMadrid",
-    "drinkMosca",
-    "drinkSantaClausVillage",
-    "drinkHawaii",
-    "drinkToronto",
-    "drinkNewYork",
-    "drinkPraga",
-    "drinkSeoul",
+    "drinkCartagena",
+    "drinkIbiza",
+    "drinkAustralia",
+    "drinkSicilia",
+    "drinkBudapest"
   ];
   const cocktailNames = [
-    "Madrid",
-    "Mosca",
-    "Santa Claus Village",
-    "Hawaii",
-    "Toronto",
-    "New York",
-    "Praga",
-    "Seoul",
+    "Cartagena",
+    "Ibiza",
+    "Australia",
+    "Sicilia",
+    "Budapest"
   ];
 
-  const { setNomeHeader, setHeaderColorato, setHeaderId } =
-    useContext(HeaderContext);
+  const { setNomeHeader, setHeaderColorato, setHeaderId } = useContext(HeaderContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -116,57 +109,36 @@ const Lista_signature = () => {
       >
         <SwiperSlide>
           <ListaCocktails
-            id="drinkMadrid"
-            cocktails={drinkMadrid}
+            id="drinkCartagena"
+            cocktails={drinkCartagena}
             label={false}
           />
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkMosca"
-            cocktails={drinkMosca}
+            id="drinkIbiza"
+            cocktails={drinkIbiza}
             label={false}
           />
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkSantaClausVillage"
-            cocktails={drinkSantaClausVillage}
+            id="drinkAustralia"
+            cocktails={drinkAustralia}
             label={false}
           />
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkHawaii"
-            cocktails={drinkHawaii}
+            id="drinkSicilia"
+            cocktails={drinkSicilia}
             label={false}
           />
         </SwiperSlide>
         <SwiperSlide>
           <ListaCocktails
-            id="drinkToronto"
-            cocktails={drinkToronto}
-            label={false}
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <ListaCocktails
-            id="drinkNewYork"
-            cocktails={drinkNewYork}
-            label={false}
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <ListaCocktails
-            id="drinkPraga"
-            cocktails={drinkPraga}
-            label={false}
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <ListaCocktails
-            id="drinkSeoul"
-            cocktails={drinkSeoul}
+            id="drinkBudapest"
+            cocktails={drinkBudapest}
             label={false}
           />
         </SwiperSlide>
