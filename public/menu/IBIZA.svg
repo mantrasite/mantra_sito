@@ -2,8 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="237.77258"
-   height="225.07697"
+   height="350"
+   width="350"
+   viewBox="0 0 350 350"
    id="svg2142"
    sodipodi:version="0.32"
    inkscape:version="0.44.1"
@@ -37,7 +38,7 @@
      inkscape:label="Capa 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-254.01538,-352.05311)">
+     transform="translate(-200,-350)">
     <g
        id="g1"
        transform="translate(-8.9363331,6.0010455)">
