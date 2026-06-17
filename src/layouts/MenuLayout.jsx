@@ -27,7 +27,7 @@ export default function MenuLayout({ Component, pageProps }) {
         />
       </Head>
 
-      {router.asPath && router.asPath.startsWith("/menu/signature") ? (
+      {isSignatureRoute ? (
         <RotateWarning />
       ) : null}
 

@@ -82,8 +82,8 @@ const SignatureCocktails = () => {
       <Cerchio
         nome="IBIZA"
         styleProp={{
-          width: `${getDynamicVh(28)}px`,
-          height: `${getDynamicVh(28)}px`,
+          width: `${getDynamicVh(30)}px`,
+          height: `${getDynamicVh(30)}px`,
           bottom: `${getDynamicVh(1)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
@@ -96,8 +96,8 @@ const SignatureCocktails = () => {
       <Cerchio
         nome="SICILIA"
         styleProp={{
-          width: `${getDynamicVh(28)}px`,
-          height: `${getDynamicVh(28)}px`,
+          width: `${getDynamicVh(30)}px`,
+          height: `${getDynamicVh(30)}px`,
           top: `${getDynamicVh(1)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
@@ -110,8 +110,8 @@ const SignatureCocktails = () => {
       <Cerchio
         nome="AUSTRALIA"
         styleProp={{
-          width: `${getDynamicVh(28)}px`,
-          height: `${getDynamicVh(28)}px`,
+          width: `${getDynamicVh(30)}px`,
+          height: `${getDynamicVh(30)}px`,
           bottom: `${getDynamicVh(10)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
@@ -124,8 +124,8 @@ const SignatureCocktails = () => {
       <Cerchio
         nome="BUDAPEST"
         styleProp={{
-          width: `${getDynamicVh(28)}px`,
-          height: `${getDynamicVh(28)}px`,
+          width: `${getDynamicVh(30)}px`,
+          height: `${getDynamicVh(30)}px`,
           top: `${getDynamicVh(1)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
@@ -146,8 +146,8 @@ const SignatureCocktails = () => {
       <Cerchio
         nome="CARTAGENA"
         styleProp={{
-          width: `${getDynamicVh(28)}px`,
-          height: `${getDynamicVh(28)}px`,
+          width: `${getDynamicVh(30)}px`,
+          height: `${getDynamicVh(30)}px`,
           bottom: `${getDynamicVh(10)}px`,
           fontSize: `${getDynamicVh(4.1)}px`,
         }}
