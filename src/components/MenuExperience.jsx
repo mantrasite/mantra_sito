@@ -103,6 +103,7 @@ const MACRO_GROUPS = [
   { key: "menuPranzo", label: "Menu pranzo" },
   { key: "menu",       label: "Menu cena"   },
   { key: "bevande",    label: "Vini"        },
+  { key: "piscina",    label: "Piscina"        },
 ];
 
 const CATEGORY_SECTIONS = {
@@ -263,7 +264,7 @@ export default function MenuExperience({ sections, restaurant }) {
       <div className="sticky top-0 z-20 mt-4 space-y-3 bg-background pb-3 pt-3">
 
         {/* Macro sezioni: 4 bottoni in griglia */}
-        <nav className="category-grid relative z-10 grid grid-cols-4 gap-2 pb-1">
+        <nav className="category-grid relative z-10 grid grid-cols-5 gap-2 pb-1">
           {MACRO_GROUPS.map(({ key, label }) => (
             <button
               key={key}
