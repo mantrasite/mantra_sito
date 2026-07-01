@@ -1,5 +1,20 @@
 import { useEffect, useState } from "react";
 
+const GROUP_OPTIONS = [
+  { value: "menuPranzo", label: "Menu Pranzo" },
+  { value: "menu",       label: "Menu Cena"   },
+  { value: "bevande",    label: "Vini"        },
+  { value: "piscina",    label: "Piscina"     },
+];
+
+function slugify(s) {
+  return s
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
 export default function AdminPage() {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
@@ -13,6 +28,8 @@ export default function AdminPage() {
     allergens: ""
   });
   const [editIndex, setEditIndex] = useState(null);
+  const [newSection, setNewSection] = useState({ id: "", title: "", group: "piscina" });
+  const [sectionIdEdited, setSectionIdEdited] = useState(false);
 
   const authHeader = () => "Basic " + btoa(`${user}:${pass}`);
 
@@ -78,6 +95,53 @@ export default function AdminPage() {
     setSelectedSection(id);
     setEditIndex(null);
     setForm({ name: "", description: "", price: "", allergens: "" });
+  };
+
+  const onNewSectionTitleChange = (title) => {
+    setNewSection((prev) => ({
+      ...prev,
+      title,
+      id: sectionIdEdited ? prev.id : slugify(title),
+    }));
+  };
+
+  const onNewSectionIdChange = (id) => {
+    setSectionIdEdited(true);
+    setNewSection((prev) => ({ ...prev, id }));
+  };
+
+  const createSection = async (e) => {
+    e.preventDefault();
+
+    if (!newSection.title || !newSection.id) return;
+
+    try {
+      const res = await fetch("/api/admin/menu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader()
+        },
+        body: JSON.stringify({ section: newSection })
+      });
+
+      if (res.ok) {
+        setData((prev) => {
+          const updated = structuredClone(prev);
+          updated.menuSections.push({ ...newSection, items: [] });
+          return updated;
+        });
+
+        setSelectedSection(newSection.id);
+        setNewSection({ id: "", title: "", group: "piscina" });
+        setSectionIdEdited(false);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || "Errore nella creazione della sezione");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const startEdit = (index) => {
@@ -255,6 +319,50 @@ export default function AdminPage() {
                       </option>
                     ))}
                   </select>
+
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-sm" style={{ color: "var(--color-gold)" }}>
+                      + Crea nuova sezione
+                    </summary>
+
+                    <form onSubmit={createSection} className="mt-3 space-y-3">
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={newSection.title}
+                        onChange={(e) => onNewSectionTitleChange(e.target.value)}
+                        placeholder="Titolo sezione (es. Piscina)"
+                        required
+                      />
+
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={newSection.id}
+                        onChange={(e) => onNewSectionIdChange(e.target.value)}
+                        placeholder="ID sezione (es. piscina)"
+                        required
+                      />
+
+                      <select
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
+                        value={newSection.group}
+                        onChange={(e) => setNewSection((prev) => ({ ...prev, group: e.target.value }))}
+                      >
+                        {GROUP_OPTIONS.map((g) => (
+                          <option key={g.value} value={g.value}>
+                            {g.label}
+                          </option>
+                        ))}
+                      </select>
+
+                      <button
+                        type="submit"
+                        className="w-full py-2 cursor-pointer rounded-md"
+                        style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
+                      >
+                        Crea sezione
+                      </button>
+                    </form>
+                  </details>
                 </div>
               )}
             </div>
