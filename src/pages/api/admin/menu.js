@@ -1,51 +1,18 @@
-import { put, list, del } from "@vercel/blob";
 import bcrypt from "bcrypt";
+import { query } from "@/lib/db";
 
-const TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
-const FILE_NAME = "menu.json";
-const BACKUP_PREFIX = "backups/";
-
-// --------------------
-// UTILS
-// --------------------
-async function fetchJSON(url) {
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      cache: "no-store",
-    },
-  });
-
-  if (!res.ok) throw new Error("Fetch failed");
-  return res.json();
-}
-
-async function fetchText(url) {
-  const res = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
-
-  if (!res.ok) throw new Error("Fetch failed");
-  return res.text();
-}
+const MAX_BACKUPS = 5;
 
 // --------------------
 // READ DATA
 // --------------------
 async function readData() {
-  try {
-    const { blobs } = await list();
-    const file = blobs.find((b) => b.pathname === FILE_NAME);
-
-    if (!file) return { menuSections: [] };
-
-    return await fetchJSON(file.url);
-  } catch (e) {
-    console.error("READ ERROR:", e);
-    return { menuSections: [] };
-  }
+  const result = await query(
+    `SELECT id, "group", label, eyebrow, title, description, accent, items
+     FROM menu_sections
+     ORDER BY position ASC`
+  );
+  return { menuSections: result.rows };
 }
 
 // --------------------
@@ -53,70 +20,23 @@ async function readData() {
 // --------------------
 async function createBackup() {
   try {
-    const { blobs } = await list();
-    const file = blobs.find((b) => b.pathname === FILE_NAME);
+    const data = await readData();
 
-    if (!file) return;
+    await query("INSERT INTO menu_backups (data) VALUES ($1)", [
+      JSON.stringify(data),
+    ]);
 
-    const content = await fetchText(file.url);
-
-    const timestamp = new Date()
-      .toISOString()
-      .replace(/[:.]/g, "-");
-
-    const backupName = `${BACKUP_PREFIX}menu-${timestamp}.json`;
-
-    await put(backupName, content, {
-      access: "private",
-      token: TOKEN,
-    });
-
-    await rotateBackups();
+    await query(
+      `DELETE FROM menu_backups
+       WHERE id IN (
+         SELECT id FROM menu_backups
+         ORDER BY created_at DESC
+         OFFSET $1
+       )`,
+      [MAX_BACKUPS]
+    );
   } catch (e) {
     console.warn("BACKUP ERROR:", e.message);
-  }
-}
-
-// --------------------
-// ROTATE BACKUPS (max 5)
-// --------------------
-async function rotateBackups() {
-  try {
-    const { blobs } = await list({ prefix: BACKUP_PREFIX });
-
-    if (blobs.length <= 5) return;
-
-    const sorted = blobs.sort(
-      (a, b) => new Date(a.uploadedAt) - new Date(b.uploadedAt)
-    );
-
-    const toDelete = sorted.slice(0, blobs.length - 5);
-
-    await Promise.all(
-      toDelete.map((file) => del(file.url, { token: TOKEN }))
-    );
-  } catch (e) {
-    console.warn("ROTATE ERROR:", e.message);
-  }
-}
-
-// --------------------
-// WRITE DATA
-// --------------------
-async function writeData(data) {
-  try {
-    await createBackup();
-
-    await put(FILE_NAME, JSON.stringify(data), {
-      access: "private",
-      allowOverwrite: true,
-      token: TOKEN,
-    });
-
-    return true;
-  } catch (e) {
-    console.error("WRITE ERROR:", e);
-    throw e;
   }
 }
 
@@ -165,21 +85,48 @@ export default async function handler(req, res) {
   }
 
   try {
-    const data = await readData();
-
     if (req.method === "GET") {
+      const data = await readData();
       return res.status(200).json(data);
     }
 
     if (req.method === "POST") {
-      const { sectionId, item } = req.body;
+      const { sectionId, item, section: newSection } = req.body;
 
-      const section = data.menuSections.find((s) => s.id === sectionId);
-      if (!section)
+      if (newSection) {
+        const { id, title, group } = newSection;
+        if (!id || !title || !group)
+          return res.status(400).json({ error: "Missing section id, title or group" });
+
+        const existing = await query("SELECT id FROM menu_sections WHERE id = $1", [id]);
+        if (existing.rows.length)
+          return res.status(409).json({ error: "Section id already exists" });
+
+        await createBackup();
+
+        const posResult = await query(
+          "SELECT COALESCE(MAX(position), -1) + 1 AS next FROM menu_sections"
+        );
+
+        await query(
+          `INSERT INTO menu_sections (id, "group", label, title, items, position)
+           VALUES ($1, $2, $3, $4, '[]'::jsonb, $5)`,
+          [id, group, newSection.label || title, title, posResult.rows[0].next]
+        );
+
+        return res.status(200).json({ ok: true });
+      }
+
+      const sectionCheck = await query("SELECT id FROM menu_sections WHERE id = $1", [sectionId]);
+      if (!sectionCheck.rows.length)
         return res.status(404).json({ error: "Section not found" });
 
-      section.items.push(item);
-      await writeData(data);
+      await createBackup();
+
+      await query(
+        `UPDATE menu_sections SET items = items || $1::jsonb WHERE id = $2`,
+        [JSON.stringify([item]), sectionId]
+      );
 
       return res.status(200).json({ ok: true });
     }
@@ -187,12 +134,24 @@ export default async function handler(req, res) {
     if (req.method === "PUT") {
       const { sectionId, index, item } = req.body;
 
-      const section = data.menuSections.find((s) => s.id === sectionId);
-      if (!section)
+      const sectionResult = await query(
+        "SELECT items FROM menu_sections WHERE id = $1",
+        [sectionId]
+      );
+      if (!sectionResult.rows.length)
         return res.status(404).json({ error: "Section not found" });
 
-      section.items[index] = item;
-      await writeData(data);
+      if (index < 0 || index >= sectionResult.rows[0].items.length)
+        return res.status(400).json({ error: "Invalid index" });
+
+      await createBackup();
+
+      await query(
+        `UPDATE menu_sections
+         SET items = jsonb_set(items, ARRAY[$1::text], $2::jsonb)
+         WHERE id = $3`,
+        [String(index), JSON.stringify(item), sectionId]
+      );
 
       return res.status(200).json({ ok: true });
     }
@@ -200,12 +159,22 @@ export default async function handler(req, res) {
     if (req.method === "DELETE") {
       const { sectionId, index } = req.body;
 
-      const section = data.menuSections.find((s) => s.id === sectionId);
-      if (!section)
+      const sectionResult = await query(
+        "SELECT items FROM menu_sections WHERE id = $1",
+        [sectionId]
+      );
+      if (!sectionResult.rows.length)
         return res.status(404).json({ error: "Section not found" });
 
-      section.items.splice(index, 1);
-      await writeData(data);
+      if (index < 0 || index >= sectionResult.rows[0].items.length)
+        return res.status(400).json({ error: "Invalid index" });
+
+      await createBackup();
+
+      await query(
+        `UPDATE menu_sections SET items = items - $1::int WHERE id = $2`,
+        [index, sectionId]
+      );
 
       return res.status(200).json({ ok: true });
     }

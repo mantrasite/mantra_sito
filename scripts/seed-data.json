@@ -1,0 +1,250 @@
+{
+  "restaurantInfo": {
+    "name": "Mantra Ristoclub",
+    "subtitle": "Menu mobile",
+    "city": "Lamezia Terme",
+    "openingHours": "Ogni giorno 18:30 - 01:00",
+    "phone": "+39 0968 000000",
+    "bookingUrl": "https://www.mantraristoclub.com/menu",
+    "address": "Contrada Rotoli, Lamezia Terme",
+    "heroNote": "Carta aggiornata del ristorante, organizzata in sezioni rapide da sfogliare su smartphone"
+  },
+  "allergensInfo": "Per informazioni su sostanze e allergeni è possibile consultare l'apposita documentazione o rivolgersi al personale.",
+  "menuSections": [
+    {
+      "id": "menu-pranzo",
+      "group": "menuPranzo",
+      "label": "Menu Pranzo",
+      "eyebrow": "Pranzo",
+      "title": "Menu Pranzo",
+      "description": "",
+      "accent": "#f4c77f",
+      "items": [
+        { "name": "TARTARE ESOTICA", "description": "Tartare di manzo con mango fresco, zenzero, riduzione di aceto balsamico e cialda croccante al formaggio", "price": "15", "allergens": [] },
+        { "name": "TARTARE RUBINO", "description": "Tartare di manzo con maionese ai lamponi, cipolla caramellata e cialda di riso allo zafferano", "price": "15", "allergens": [] },
+        { "name": "FUOCO E MANGO", "description": "Tagliata di pollo al curry piccante, servita con chutney di mango, nocciole tostate e foglie di salvia croccanti", "price": "14", "allergens": [] },
+        { "name": "SOLE E SPEZIE", "description": "Tagliata di manzo prima scelta Val Serchio con salsa teriyaki, miele e blend di oli aromatici piccanti", "price": "18", "allergens": [] },
+        { "name": "CLASSICO MANTRA", "description": "Hamburger di manzo con lattuga, pomodoro, cheddar e bacon croccante", "price": "13", "allergens": [] },
+        { "name": "RUBINO BURGER", "description": "Hamburger di manzo con maionese ai lamponi, cipolle caramellate, insalata iceberg e pecorino croccante", "price": "14", "allergens": [] },
+        { "name": "VERDE INCANTO", "description": "Burger vegetariano con patty vegetale, rucola, mix di verdure di stagione e salsa guacamole fresca", "price": "12", "allergens": [] },
+        { "name": "Focaccine assortite ", "description": "Cotto mozzarella \nCotto maionese pomodoro \nCrudo mozzarella \nPorchetta \nCrudo rucola grana \nTonno pomodoro maionese \n", "price": "4,50", "allergens": [] }
+      ]
+    },
+    {
+      "id": "apericena-conviviale",
+      "group": "menu",
+      "label": "Apericena",
+      "eyebrow": "Conviviale",
+      "title": "Apericena Conviviale",
+      "description": "Formula conviviale con tagliere completo e drink incluso, pensata per l'apericena",
+      "accent": "#f1a637",
+      "items": [
+        { "name": "Tagliere Mantra Experience", "description": "Selezione conviviale di salumi e formaggi, crostini gourmet e sfizi dello chef, accompagnata da 1 drink signature, calice di vino o soft drink", "price": "20 € a persona", "allergens": [1, 3, 7, 8, 10, 12] }
+      ]
+    },
+    {
+      "id": "antipasti",
+      "group": "menu",
+      "label": "Antipasti",
+      "eyebrow": "Inizio",
+      "title": "Antipasti",
+      "description": "Selezione di antipasti da condividere e proposte di apertura dal profilo mediterraneo",
+      "accent": "#dbaa5f",
+      "items": [
+        { "name": "Tapas & Finger Misti dello Chef", "description": "Selezione mista di tapas e finger food dello chef, pensata per la condivisione", "price": "15 €", "allergens": [1, 2, 3, 4, 6, 7, 8, 10, 11] },
+        { "name": "Giardino Mantra", "description": "Un viaggio vegetale tra ortaggi di stagione, lavorati in chiave contemporanea, dove freschezza, dolcezza e acidità si incontrano in perfetto equilibrio", "price": "12 €", "allergens": [6, 8, 11] },
+        { "name": "Tagliere Mantra", "description": "Selezione di salumi e formaggi, crostini gourmet e sfiziosità dello chef", "price": "19 €", "allergens": [1, 3, 7, 8, 10, 12] },
+        { "name": "Insalata di Mare", "description": "Selezione di crostacei e calamari, condita con agrumi, olio extravergine ed erbe fresche", "price": "17 €", "allergens": [2, 4, 9, 10, 12, 14] }
+      ]
+    },
+    {
+      "id": "selezione-tartare",
+      "group": "menu",
+      "label": "Tartare",
+      "eyebrow": "Crudo",
+      "title": "Selezione Tartare",
+      "description": "Tartare di carne e di pesce con abbinamenti aromatici e contrasti più creativi",
+      "accent": "#efe2d0",
+      "items": [
+        { "name": "Essenza di Manzo", "description": "Tartare di manzo al coltello, condita con olio extravergine, sale e pepe", "price": "15 €", "allergens": [10] },
+        { "name": "Tartare Esotica", "description": "Tartare di manzo con mango fresco, zenzero, riduzione di aceto balsamico e cialda croccante al formaggio", "price": "15 €", "allergens": [1, 7, 12] },
+        { "name": "Tartare Rubino", "description": "Tartare di manzo con maionese ai lamponi, cipolla caramellata e cialda di riso allo zafferano", "price": "15 €", "allergens": [1, 3, 7, 12] },
+        { "name": "Tartare Oceanica", "description": "Tartare di pesce del giorno con mango, avocado e riduzione di aceto agli agrumi", "price": "15 €", "allergens": [4, 6, 11, 12] }
+      ]
+    },
+    {
+      "id": "primi-piatti",
+      "group": "menu",
+      "label": "Primi",
+      "eyebrow": "Cucina",
+      "title": "Primi Piatti",
+      "description": "Primi piatti dal taglio contemporaneo, tra pasta fresca, profumi mediterranei e note speziate",
+      "accent": "#f4c77f",
+      "items": [
+        { "name": "Primo del Giorno", "description": "Tagliatelle fatte in casa al ragù bianco e mandorle tostate", "price": "12 €", "allergens": [] },
+        { "name": "Paccheri Aromatici", "description": "Paccheri al curry con melanzane alla menta, un tocco di menta fresca e spolverata di pecorino", "price": "13 €", "allergens": [1, 7] },
+        { "name": "Spaghetto Trilogia di Pomodorini", "description": "Spaghetto al dente con pomodorini datterino, ciliegino e cuore di Pachino, saltati con olio extravergine e rifinito con olio al basilico fresco", "price": "11 €", "allergens": [1] },
+        { "name": "Ravioli del Mare", "description": "Ravioli ripieni di branzino e ricotta, conditi con timo fresco e datterini freschi", "price": "16 €", "allergens": [1, 3, 4, 7] }
+      ]
+    },
+    {
+      "id": "secondi-piatti",
+      "group": "menu",
+      "label": "Secondi",
+      "eyebrow": "Griglia e Mare",
+      "title": "Secondi Piatti",
+      "description": "Secondi tra carne, pollo e pesce. Tutti comprensivi di contorno a scelta tra patate fritte o patate arrosto",
+      "accent": "#f1a637",
+      "items": [
+        { "name": "Secondo del Giorno", "description": "Scorfano all'acqua pazza con pomodorini e prezzemolo", "price": "15 €", "allergens": [] },
+        { "name": "Trancio Esotico Orientale", "description": "Trancio di salmone marinato al lime e zenzero, avocado cremoso, chutney di mango e agrumi, glassa teriyaki, verdurine di stagione e patate al forno", "price": "19 €", "allergens": [4] },
+        { "name": "Fuoco e Mango", "description": "Tagliata di pollo al curry piccante, servita con chutney di mango, nocciole tostate e foglie di salvia croccanti", "price": "14 €", "allergens": [8] },
+        { "name": "Note d'Italia", "description": "Tagliata di manzo prima scelta Val Serchio, servita con rucola fresca e scaglie di grana", "price": "18 €", "allergens": [7, 10, 12] },
+        { "name": "Sole e Spezie", "description": "Tagliata di manzo prima scelta Val Serchio con salsa teriyaki, miele e blend di oli aromatici piccanti", "price": "18 €", "allergens": [7, 10, 12] },
+        { "name": "Crepuscolo al Chianti", "description": "Tagliata di manzo prima scelta Val Serchio con cipolle brasate, crema di patate e riduzione al Chianti", "price": "18 €", "allergens": [7, 10, 12] },
+        { "name": "Vegetariano", "description": "Sformatone di verdure fresche di stagione accompagnate con cipolla agrodolce", "price": "13 €", "allergens": [3, 7] }
+      ]
+    },
+    {
+      "id": "selezione-hamburger",
+      "group": "menu",
+      "label": "Hamburger",
+      "eyebrow": "Street Gourmet",
+      "title": "Selezione Hamburger",
+      "description": "Hamburger e wrap dal profilo deciso, tra ricette classiche e combinazioni più creative",
+      "accent": "#efe2d0",
+      "items": [
+        { "name": "Classico Mantra", "description": "Hamburger di manzo con lattuga, pomodoro, cheddar e bacon croccante", "price": "13 €", "allergens": [1, 7] },
+        { "name": "Rubino Burger", "description": "Hamburger di manzo con maionese ai lamponi, cipolle caramellate, insalata iceberg e pecorino croccante", "price": "13 €", "allergens": [1, 3, 7] },
+        { "name": "Verde Incanto", "description": "Burger vegetariano con patty vegetale, rucola, mix di verdure di stagione e salsa guacamole fresca", "price": "13 €", "allergens": [1, 3, 6] },
+        { "name": "Wrap Fiamma", "description": "Piadina croccante con straccetti di cotoletta di pollo, salsa smokey, bacon croccante, rucola fresca e scaglie di grana", "price": "13 €", "allergens": [1, 3, 7] }
+      ]
+    },
+    {
+      "id": "dolci",
+      "group": "menu",
+      "label": "Dolci",
+      "eyebrow": "Finale",
+      "title": "Dolci",
+      "description": "Dessert classici e freschi per chiudere il percorso con una nota golosa o leggera",
+      "accent": "#dbaa5f",
+      "items": [
+        { "name": "Cheesecake Mantra", "description": "Morbida cheesecake servita con topping a scelta tra: Nutella, Passion fruit, Frutti rossi, Caramello salato", "price": "5 €", "allergens": [1, 3, 6, 7, 8] },
+        { "name": "Tortino Cuore Caldo", "description": "Tortino al cioccolato con cuore fondente, servito caldo", "price": "5 €", "allergens": [1, 3, 6, 7] },
+        { "name": "Tiramisù Arancia", "description": "Tiramisù cremoso all'arancia, servito fresco", "price": "5 €", "allergens": [1, 3, 7] },
+        { "name": "Tiramisù Arancia e Cioccolato", "description": "Tiramisù all'arancia e cioccolato con equilibrio tra note agrumate e cacao", "price": "5 €", "allergens": [1, 3, 6, 7] },
+        { "name": "Tiramisù Classico", "description": "Tiramisù tradizionale, cremoso e morbido, con savoiardi imbevuti di caffè e spolverata di cacao amaro", "price": "5 €", "allergens": [1, 3, 7] }
+      ]
+    },
+    {
+      "id": "coperto",
+      "group": "menu",
+      "label": "Coperto",
+      "eyebrow": "Servizio",
+      "title": "Coperto",
+      "description": "Coperto a persona",
+      "accent": "#f1a637",
+      "items": [{ "name": "Coperto", "description": "", "price": "1.50 €" }]
+    },
+    {
+      "id": "vini-rossi",
+      "group": "bevande",
+      "label": "Rosso",
+      "eyebrow": "Wine List",
+      "title": "Rosso",
+      "description": "Selezione di vini rossi disponibili in bottiglia",
+      "accent": "#dbaa5f",
+      "items": [
+        { "name": "Bolgheri Rosso DOC Sorraia - Podere le Scuderie", "description": "Cabernet Sauvignon, Merlot, Syrah", "price": "29 €" },
+        { "name": "Bolgheri Superiore DOC - Podere le Scuderie", "description": "Cabernet Franc, Cabernet Sauvignon", "price": "44 €" },
+        { "name": "Pinot Nero Trentino DOC - Cantina Toblino", "description": "100% Pinot Nero", "price": "23 €" },
+        { "name": "Langhe Nebbiolo DOC - Forte Masso", "description": "100% Nebbiolo", "price": "36 €" },
+        { "name": "Chianti Colli Senesi DOCG - San Giorgio a Lapi", "description": "90% Sangiovese, 10% Canaiolo", "price": "16 €" },
+        { "name": "Syrah DOC Erice Luce d'Oriente - Fazio", "description": "100% Syrah", "price": "19 €" },
+        { "name": "Il Prataccio - Montecarlo", "description": "Vino rosso", "price": "14 €" },
+        { "name": "Rosso Toscano IGT - Cantine Coli", "description": "Sangiovese, Canaiolo nero", "price": "12 €" }
+      ]
+    },
+    {
+      "id": "vini-bianchi",
+      "group": "bevande",
+      "label": "Bianco",
+      "eyebrow": "Wine List",
+      "title": "Bianco",
+      "description": "Selezione di vini bianchi disponibili in bottiglia",
+      "accent": "#dbaa5f",
+      "items": [
+        { "name": "Vermentino di Bolgheri DOC Sorraia - Podere le Scuderie", "description": "100% Vermentino", "price": "29 €" },
+        { "name": "Passerina Terre di Chieti IGP Kriya - Vigna Madre", "description": "100% Passerina", "price": "17 €" },
+        { "name": "Gewurztraminer Trentino DOC - Cantina Toblino", "description": "100% Gewurztraminer", "price": "23 €" },
+        { "name": "Ribolla Gialla Venezia Giulia IGT - Fossamala", "description": "100% Ribolla Gialla", "price": "21 €" },
+        { "name": "Pinot Grigio Friuli DOC - Fossamala", "description": "100% Pinot Grigio", "price": "19 €" },
+        { "name": "Il Prataccio - Montecarlo", "description": "Cabernet Sauvignon, Sangiovese, Canaiolo Nero, Malvasia Nera", "price": "14 €" },
+        { "name": "Bianco Toscano IGT - Cantine Coli", "description": "Sangiovese, Canaiolo nero", "price": "12 €" }
+      ]
+    },
+    {
+      "id": "vini-rosati",
+      "group": "bevande",
+      "label": "Rosato",
+      "eyebrow": "Wine List",
+      "title": "Rosato",
+      "description": "Selezione di vini rosati disponibili in bottiglia",
+      "accent": "#dbaa5f",
+      "items": [
+        { "name": "Rosato Lagrein Kretzer Trentino DOC - Cantina Toblino", "description": "100% Lagrein", "price": "23 €" }
+      ]
+    },
+    {
+      "id": "champagne",
+      "group": "bevande",
+      "label": "Champagne",
+      "eyebrow": "Wine List",
+      "title": "Champagne",
+      "description": "Selezione champagne disponibile in bottiglia",
+      "accent": "#dbaa5f",
+      "items": [
+        { "name": "G.H. Mumm - Reims 218", "description": "", "price": "" },
+        { "name": "Veuve Clicquot - Brut", "description": "", "price": "" },
+        { "name": "Moet e Chandon Brut", "description": "", "price": "" }
+      ]
+    },
+    {
+      "id": "franciacorta",
+      "group": "bevande",
+      "label": "Franciacorta",
+      "eyebrow": "Wine List",
+      "title": "Franciacorta",
+      "description": "Selezione franciacorta disponibile in bottiglia",
+      "accent": "#dbaa5f",
+      "items": [
+        { "name": "Franciacorta DOCG Anniversario Brut - Serlini", "description": "", "price": "43 €" }
+      ]
+    },
+    {
+      "id": "bollicine",
+      "group": "bevande",
+      "label": "Bollicine",
+      "eyebrow": "Wine List",
+      "title": "Bollicine",
+      "description": "Selezione di bollicine disponibile in bottiglia",
+      "accent": "#dbaa5f",
+      "items": [
+        { "name": "Prosecco DOC Treviso Brut - San Martino", "description": "100% Glera", "price": "20 €" },
+        { "name": "Prosecco Valdobbiadene DOCG Superiore - Conca d'Oro", "description": "100% Glera", "price": "30 €" },
+        { "name": "Prosecco Valdobbiadene - Corner", "description": "Glera e Garganega", "price": "26 €" },
+        { "name": "Spumante Gran Cuvee Tre Ville Extra Dry - Serena", "description": "Glera e Garganega", "price": "17 €" }
+      ]
+    },
+    {
+      "id": "piscina",
+      "group": "piscina",
+      "label": "Piscina",
+      "eyebrow": "Pool",
+      "title": "Piscina",
+      "description": "Proposte pensate per il relax a bordo piscina",
+      "accent": "#f4c77f",
+      "items": []
+    }
+  ]
+}
