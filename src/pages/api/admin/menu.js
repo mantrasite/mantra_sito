@@ -171,7 +171,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "DELETE") {
-      const { sectionId, index } = req.body;
+      const { sectionId, index, deleteSection } = req.body;
 
       const sectionResult = await query(
         "SELECT items FROM menu_sections WHERE id = $1",
@@ -179,6 +179,14 @@ export default async function handler(req, res) {
       );
       if (!sectionResult.rows.length)
         return res.status(404).json({ error: "Section not found" });
+
+      if (deleteSection) {
+        await createBackup();
+
+        await query("DELETE FROM menu_sections WHERE id = $1", [sectionId]);
+
+        return res.status(200).json({ ok: true });
+      }
 
       if (index < 0 || index >= sectionResult.rows[0].items.length)
         return res.status(400).json({ error: "Invalid index" });

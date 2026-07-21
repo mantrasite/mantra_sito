@@ -144,6 +144,41 @@ export default function AdminPage() {
     }
   };
 
+  const deleteCurrentSection = async () => {
+    if (!selectedSection) return;
+    if (!confirm(`Eliminare l'intera sezione "${currentSection?.title}" e tutte le sue voci?`)) return;
+
+    try {
+      const res = await fetch("/api/admin/menu", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader()
+        },
+        body: JSON.stringify({ sectionId: selectedSection, deleteSection: true })
+      });
+
+      if (res.ok) {
+        setData((prev) => {
+          const updated = structuredClone(prev);
+          updated.menuSections = updated.menuSections.filter(
+            (s) => s.id !== selectedSection
+          );
+          setSelectedSection(updated.menuSections[0]?.id || "");
+          return updated;
+        });
+
+        setEditIndex(null);
+        setForm({ name: "", description: "", price: "", allergens: "" });
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || "Errore nell'eliminazione della sezione");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const startEdit = (index) => {
     const item = items[index];
 
@@ -357,6 +392,16 @@ export default function AdminPage() {
                       </option>
                     ))}
                   </select>
+
+                  <button
+                    type="button"
+                    onClick={deleteCurrentSection}
+                    disabled={!selectedSection}
+                    className="w-full py-2 cursor-pointer rounded-md text-sm text-red-400 disabled:opacity-30 disabled:cursor-not-allowed"
+                    style={{ background: "rgba(255,255,255,0.04)" }}
+                  >
+                    Elimina sezione
+                  </button>
 
                   <details className="mt-2">
                     <summary className="cursor-pointer text-sm" style={{ color: "var(--color-gold)" }}>
