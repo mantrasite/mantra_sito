@@ -392,8 +392,8 @@ export default function AdminPage() {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1">
-          <div className="col-span-1 mb-3">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-1 mb-3">
             <div className="bg-white/3 rounded-lg p-6 shadow-md">
               {!authOk ? (
                 <form onSubmit={tryLogin} className="space-y-4">
@@ -423,101 +423,127 @@ export default function AdminPage() {
                   </button>
                 </form>
               ) : (
-                <div className="space-y-3">
-                  <label className="block text-lg mb-3">Sezione</label>
+                <div className="space-y-5">
+                  <div>
+                    <h2 className="font-semibold mb-3" style={{ color: "var(--color-gold)" }}>
+                      Sezioni del menu
+                    </h2>
 
-                  <select
-                    className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
-                    value={selectedSection}
-                    onChange={(e) => onSelectSection(e.target.value)}
-                  >
-                    {data?.menuSections?.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.title} — {s.group}
-                      </option>
-                    ))}
-                  </select>
+                    <label className="block text-sm mb-1 text-white/60">Sezione selezionata</label>
+                    <select
+                      className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
+                      value={selectedSection}
+                      onChange={(e) => onSelectSection(e.target.value)}
+                    >
+                      {GROUP_OPTIONS.map(({ value, label }) => {
+                        const secs = data?.menuSections?.filter((s) => s.group === value) ?? [];
+                        if (!secs.length) return null;
+                        return (
+                          <optgroup key={value} label={label}>
+                            {secs.map((s) => (
+                              <option key={s.id} value={s.id}>{s.title}</option>
+                            ))}
+                          </optgroup>
+                        );
+                      })}
+                    </select>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={deleteCurrentSection}
-                    disabled={!selectedSection}
-                    className="w-full py-2 cursor-pointer rounded-md text-sm text-red-400 disabled:opacity-30 disabled:cursor-not-allowed"
-                    style={{ background: "rgba(255,255,255,0.04)" }}
-                  >
-                    Elimina sezione
-                  </button>
+                  {currentSection && (
+                    <div className="border-t border-white/8 pt-4">
+                      <h3 className="text-sm font-semibold mb-3">Modifica questa sezione</h3>
 
-                  <details className="mt-2">
-                    <summary className="cursor-pointer text-sm" style={{ color: "var(--color-gold)" }}>
-                      Modifica sezione
-                    </summary>
+                      <form onSubmit={updateSection} className="space-y-3">
+                        <div>
+                          <label className="block text-sm mb-1 text-white/60">Titolo</label>
+                          <input
+                            className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                            value={sectionEdit.title}
+                            onChange={(e) => setSectionEdit((prev) => ({ ...prev, title: e.target.value }))}
+                            required
+                          />
+                        </div>
 
-                    <form onSubmit={updateSection} className="mt-3 space-y-3">
-                      <input
-                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
-                        value={sectionEdit.title}
-                        onChange={(e) => setSectionEdit((prev) => ({ ...prev, title: e.target.value }))}
-                        placeholder="Titolo sezione"
-                        required
-                      />
+                        <div>
+                          <label className="block text-sm mb-1 text-white/60">Sezione principale</label>
+                          <select
+                            className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
+                            value={sectionEdit.group}
+                            onChange={(e) => setSectionEdit((prev) => ({ ...prev, group: e.target.value }))}
+                          >
+                            {GROUP_OPTIONS.map((g) => (
+                              <option key={g.value} value={g.value}>
+                                {g.label}
+                              </option>
+                            ))}
+                          </select>
+                          <p className="mt-1 text-xs text-white/40">
+                            Il tab del menu (Pranzo, Cena, Vini, Piscina) sotto cui compare questa sezione.
+                          </p>
+                        </div>
 
-                      <select
-                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
-                        value={sectionEdit.group}
-                        onChange={(e) => setSectionEdit((prev) => ({ ...prev, group: e.target.value }))}
-                      >
-                        {GROUP_OPTIONS.map((g) => (
-                          <option key={g.value} value={g.value}>
-                            {g.label}
-                          </option>
-                        ))}
-                      </select>
+                        <button
+                          type="submit"
+                          className="w-full py-2 cursor-pointer rounded-md"
+                          style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
+                        >
+                          Salva modifiche
+                        </button>
+                      </form>
 
                       <button
-                        type="submit"
-                        disabled={!selectedSection}
-                        className="w-full py-2 cursor-pointer rounded-md disabled:opacity-30 disabled:cursor-not-allowed"
-                        style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
+                        type="button"
+                        onClick={deleteCurrentSection}
+                        className="mt-3 w-full py-2 cursor-pointer rounded-md text-sm text-red-400"
+                        style={{ background: "rgba(255,255,255,0.04)" }}
                       >
-                        Salva sezione
+                        Elimina questa sezione
                       </button>
-                    </form>
-                  </details>
+                    </div>
+                  )}
 
-                  <details className="mt-2">
-                    <summary className="cursor-pointer text-sm" style={{ color: "var(--color-gold)" }}>
-                      + Crea nuova sezione
+                  <details className="border-t border-white/8 pt-4">
+                    <summary className="cursor-pointer text-sm font-semibold" style={{ color: "var(--color-gold)" }}>
+                      + Aggiungi nuova sezione
                     </summary>
 
                     <form onSubmit={createSection} className="mt-3 space-y-3">
-                      <input
-                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
-                        value={newSection.title}
-                        onChange={(e) => onNewSectionTitleChange(e.target.value)}
-                        placeholder="Titolo sezione (es. Piscina)"
-                        required
-                      />
+                      <div>
+                        <label className="block text-sm mb-1 text-white/60">Titolo</label>
+                        <input
+                          className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                          value={newSection.title}
+                          onChange={(e) => onNewSectionTitleChange(e.target.value)}
+                          placeholder="Es. Piscina"
+                          required
+                        />
+                      </div>
 
-                      <input
-                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
-                        value={newSection.id}
-                        onChange={(e) => onNewSectionIdChange(e.target.value)}
-                        placeholder="ID sezione (es. piscina)"
-                        required
-                      />
+                      <div>
+                        <label className="block text-sm mb-1 text-white/60">ID (generato automaticamente)</label>
+                        <input
+                          className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                          value={newSection.id}
+                          onChange={(e) => onNewSectionIdChange(e.target.value)}
+                          placeholder="Es. piscina"
+                          required
+                        />
+                      </div>
 
-                      <select
-                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
-                        value={newSection.group}
-                        onChange={(e) => setNewSection((prev) => ({ ...prev, group: e.target.value }))}
-                      >
-                        {GROUP_OPTIONS.map((g) => (
-                          <option key={g.value} value={g.value}>
-                            {g.label}
-                          </option>
-                        ))}
-                      </select>
+                      <div>
+                        <label className="block text-sm mb-1 text-white/60">Sezione principale</label>
+                        <select
+                          className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
+                          value={newSection.group}
+                          onChange={(e) => setNewSection((prev) => ({ ...prev, group: e.target.value }))}
+                        >
+                          {GROUP_OPTIONS.map((g) => (
+                            <option key={g.value} value={g.value}>
+                              {g.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
                       <button
                         type="submit"
@@ -533,7 +559,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="col-span-2">
+          <div className="lg:col-span-2">
             {authOk ? (
               <div className="bg-white/3 rounded-lg p-6 shadow-md">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
