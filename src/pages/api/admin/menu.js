@@ -132,7 +132,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "PUT") {
-      const { sectionId, index, item } = req.body;
+      const { sectionId, index, item, items: reorderedItems } = req.body;
 
       const sectionResult = await query(
         "SELECT items FROM menu_sections WHERE id = $1",
@@ -140,6 +140,20 @@ export default async function handler(req, res) {
       );
       if (!sectionResult.rows.length)
         return res.status(404).json({ error: "Section not found" });
+
+      if (Array.isArray(reorderedItems)) {
+        if (reorderedItems.length !== sectionResult.rows[0].items.length)
+          return res.status(400).json({ error: "Item count mismatch" });
+
+        await createBackup();
+
+        await query(
+          `UPDATE menu_sections SET items = $1::jsonb WHERE id = $2`,
+          [JSON.stringify(reorderedItems), sectionId]
+        );
+
+        return res.status(200).json({ ok: true });
+      }
 
       if (index < 0 || index >= sectionResult.rows[0].items.length)
         return res.status(400).json({ error: "Invalid index" });

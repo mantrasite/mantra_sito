@@ -231,6 +231,44 @@ export default function AdminPage() {
     }
   };
 
+  const moveItem = async (index, direction) => {
+    const targetIndex = direction === "up" ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+
+    const reordered = [...items];
+    [reordered[index], reordered[targetIndex]] = [reordered[targetIndex], reordered[index]];
+
+    try {
+      const res = await fetch("/api/admin/menu", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader()
+        },
+        body: JSON.stringify({
+          sectionId: selectedSection,
+          items: reordered
+        })
+      });
+
+      if (res.ok) {
+        setData((prev) => {
+          const updated = structuredClone(prev);
+          const section = updated.menuSections.find(
+            (s) => s.id === selectedSection
+          );
+          section.items = reordered;
+          return updated;
+        });
+
+        setEditIndex(null);
+        setForm({ name: "", description: "", price: "", allergens: "" });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const removeItem = async (index) => {
     if (!confirm("Eliminare questa voce?")) return;
 
@@ -394,6 +432,26 @@ export default function AdminPage() {
                             </div>
 
                             <div className="flex flex-col gap-2 ml-4">
+                              <div className="flex gap-1">
+                                <button
+                                  onClick={() => moveItem(i, "up")}
+                                  disabled={i === 0}
+                                  className="px-2 py-1 cursor-pointer rounded-md text-sm disabled:opacity-30 disabled:cursor-not-allowed"
+                                  style={{ background: "rgba(255,255,255,0.04)" }}
+                                  aria-label="Sposta su"
+                                >
+                                  ▲
+                                </button>
+                                <button
+                                  onClick={() => moveItem(i, "down")}
+                                  disabled={i === items.length - 1}
+                                  className="px-2 py-1 cursor-pointer rounded-md text-sm disabled:opacity-30 disabled:cursor-not-allowed"
+                                  style={{ background: "rgba(255,255,255,0.04)" }}
+                                  aria-label="Sposta giù"
+                                >
+                                  ▼
+                                </button>
+                              </div>
                               <button onClick={() => startEdit(i)} className="px-3 py-1 cursor-pointer rounded-md text-sm" style={{ background: "rgba(255,255,255,0.04)" }}>
                                 Modifica
                               </button>
