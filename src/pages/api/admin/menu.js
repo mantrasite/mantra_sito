@@ -132,7 +132,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "PUT") {
-      const { sectionId, index, item, items: reorderedItems } = req.body;
+      const { sectionId, index, item, items: reorderedItems, sectionUpdate } = req.body;
 
       const sectionResult = await query(
         "SELECT items FROM menu_sections WHERE id = $1",
@@ -140,6 +140,21 @@ export default async function handler(req, res) {
       );
       if (!sectionResult.rows.length)
         return res.status(404).json({ error: "Section not found" });
+
+      if (sectionUpdate) {
+        const { title, group } = sectionUpdate;
+        if (!title || !group)
+          return res.status(400).json({ error: "Missing title or group" });
+
+        await createBackup();
+
+        await query(
+          `UPDATE menu_sections SET title = $1, label = $1, "group" = $2 WHERE id = $3`,
+          [title, group, sectionId]
+        );
+
+        return res.status(200).json({ ok: true });
+      }
 
       if (Array.isArray(reorderedItems)) {
         if (reorderedItems.length !== sectionResult.rows[0].items.length)

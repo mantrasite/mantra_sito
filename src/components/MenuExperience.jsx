@@ -106,27 +106,6 @@ const MACRO_GROUPS = [
   { key: "piscina",    label: "Piscina"        },
 ];
 
-const CATEGORY_SECTIONS = {
-  menu: [
-    { id: "apericena-conviviale", label: "Apericena" },
-    { id: "antipasti",            label: "Antipasti" },
-    { id: "selezione-tartare",    label: "Tartare"   },
-    { id: "primi-piatti",         label: "Primi"     },
-    { id: "secondi-piatti",       label: "Secondi"   },
-    { id: "selezione-hamburger",  label: "Hamburger" },
-    { id: "dolci",                label: "Dolci"     },
-    { id: "coperto",              label: "Coperto"   },
-  ],
-  bevande: [
-    { id: "vini-rossi",   label: "Rosso"        },
-    { id: "vini-bianchi", label: "Bianco"       },
-    { id: "vini-rosati",  label: "Rosato"       },
-    { id: "champagne",    label: "Champagne"    },
-    { id: "franciacorta", label: "Franciacorta" },
-    { id: "bollicine",    label: "Bollicine"    },
-  ],
-};
-
 export default function MenuExperience({ sections, restaurant }) {
   const [query, setQuery]                 = useState("");
   const [activeMacro, setActiveMacro]     = useState("menu");
@@ -158,16 +137,15 @@ export default function MenuExperience({ sections, restaurant }) {
     return () => { if (obs) obs.disconnect(); };
   }, [ctxHideHeader]);
 
-  // Sottocategorie disponibili per il macro corrente
+  // Sottocategorie disponibili per il macro corrente, lette dai dati (non più hardcoded)
   const availableSectionIds = useMemo(() => {
-    const ids = new Set(sections.map((s) => s.id));
-    return (CATEGORY_SECTIONS[activeMacro] ?? []).filter((c) => ids.has(c.id));
+    return sections
+      .filter((s) => s.group === activeMacro)
+      .map((s) => ({ id: s.id, label: s.label || s.title }));
   }, [activeMacro, sections]);
 
   // Imposta activeSection al cambio macro
   useEffect(() => {
-    if (activeMacro === "menuPranzo") { setActiveSection("menu-pranzo"); return; }
-    if (activeMacro === "piscina") { setActiveSection("piscina"); return; }
     setActiveSection((cur) => {
       const valid = availableSectionIds.some((c) => c.id === cur);
       return valid ? cur : (availableSectionIds[0]?.id ?? "");
@@ -181,7 +159,7 @@ export default function MenuExperience({ sections, restaurant }) {
       if (!hash) return;
       const match = sections.find((s) => s.id === hash);
       if (!match) return;
-      setActiveMacro(match.group === "menuPranzo" ? "menuPranzo" : match.group);
+      setActiveMacro(match.group);
       setActiveSection(hash);
     };
     sync();
@@ -192,17 +170,6 @@ export default function MenuExperience({ sections, restaurant }) {
   // Items da mostrare
   const displayedItems = useMemo(() => {
     const q = query.toLowerCase().trim();
-
-    if (activeMacro === "menuPranzo") {
-      const s = sections.find((s) => s.id === "menu-pranzo");
-      const items = s?.items ?? [];
-      if (!q) return items;
-      return items.filter((item) =>
-        [item.name, item.description ?? "", ...(item.badges ?? [])]
-          .join(" ").toLowerCase().includes(q)
-      );
-    }
-
     const section = sections.find((s) => s.id === activeSection);
     const items   = section?.items ?? [];
     if (!q) return items;
@@ -210,12 +177,11 @@ export default function MenuExperience({ sections, restaurant }) {
       [item.name, item.description ?? "", ...(item.badges ?? [])]
         .join(" ").toLowerCase().includes(q)
     );
-  }, [activeMacro, activeSection, sections, query]);
+  }, [activeSection, sections, query]);
 
   const activeSectionTitle = useMemo(() => {
-    if (activeMacro === "menuPranzo") return "Menu Pranzo";
     return sections.find((s) => s.id === activeSection)?.title ?? "";
-  }, [activeMacro, activeSection, sections]);
+  }, [activeSection, sections]);
 
   const activateSection = (id) => {
     setActiveSection(id);
@@ -304,8 +270,8 @@ export default function MenuExperience({ sections, restaurant }) {
           />
         </label>
 
-        {/* Sottocategorie — solo per menu cena e bevande */}
-        {activeMacro !== "menuPranzo" && availableSectionIds.length > 0 && (
+        {/* Sottocategorie — solo se il gruppo ha più di una sezione */}
+        {availableSectionIds.length > 1 && (
           <nav className="category-grid relative z-10 grid grid-cols-2 gap-2 pb-1 sm:grid-cols-3">
             {availableSectionIds.map(({ id, label }) => (
               <button
@@ -325,29 +291,7 @@ export default function MenuExperience({ sections, restaurant }) {
       {/* Contenuto */}
       <main id="menu-results" className="mt-5 space-y-4">
 
-        {activeMacro === "menuPranzo" ? (
-          displayedItems.length === 0 ? (
-            <section className="menu-card px-5 py-8 text-center text-white/75">
-              <p className="font-display text-3xl uppercase text-(--color-gold)">
-                Menu Pranzo
-              </p>
-              <p className="mt-3 text-sm leading-6 text-white/60">
-                {query
-                  ? "Nessun piatto corrisponde alla ricerca."
-                  : "Il menu del pranzo non è ancora disponibile."}
-              </p>
-            </section>
-          ) : (
-            <section className="px-1 py-2">
-              <div className="space-y-1 border-t border-white/8 pt-2">
-                {displayedItems.map((item) => (
-                  <MenuItem key={item.name} item={item} />
-                ))}
-              </div>
-            </section>
-          )
-
-        ) : displayedItems.length === 0 ? (
+        {displayedItems.length === 0 ? (
           <section className="menu-card px-5 py-8 text-center text-white/75">
             <p className="font-display text-3xl uppercase text-(--color-gold)">
               Nessun risultato

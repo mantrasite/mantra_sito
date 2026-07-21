@@ -30,6 +30,7 @@ export default function AdminPage() {
   const [editIndex, setEditIndex] = useState(null);
   const [newSection, setNewSection] = useState({ id: "", title: "", group: "piscina" });
   const [sectionIdEdited, setSectionIdEdited] = useState(false);
+  const [sectionEdit, setSectionEdit] = useState({ title: "", group: "menu" });
 
   const authHeader = () => "Basic " + btoa(`${user}:${pass}`);
 
@@ -91,10 +92,54 @@ export default function AdminPage() {
 
   const items = currentSection?.items || [];
 
+  useEffect(() => {
+    if (currentSection) {
+      setSectionEdit({ title: currentSection.title || "", group: currentSection.group || "menu" });
+    }
+  }, [selectedSection, currentSection]);
+
   const onSelectSection = (id) => {
     setSelectedSection(id);
     setEditIndex(null);
     setForm({ name: "", description: "", price: "", allergens: "" });
+  };
+
+  const updateSection = async (e) => {
+    e.preventDefault();
+
+    if (!selectedSection || !sectionEdit.title || !sectionEdit.group) return;
+
+    try {
+      const res = await fetch("/api/admin/menu", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader()
+        },
+        body: JSON.stringify({
+          sectionId: selectedSection,
+          sectionUpdate: sectionEdit
+        })
+      });
+
+      if (res.ok) {
+        setData((prev) => {
+          const updated = structuredClone(prev);
+          const section = updated.menuSections.find(
+            (s) => s.id === selectedSection
+          );
+          section.title = sectionEdit.title;
+          section.label = sectionEdit.title;
+          section.group = sectionEdit.group;
+          return updated;
+        });
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || "Errore nel salvataggio della sezione");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const onNewSectionTitleChange = (title) => {
@@ -402,6 +447,43 @@ export default function AdminPage() {
                   >
                     Elimina sezione
                   </button>
+
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-sm" style={{ color: "var(--color-gold)" }}>
+                      Modifica sezione
+                    </summary>
+
+                    <form onSubmit={updateSection} className="mt-3 space-y-3">
+                      <input
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10 text-white"
+                        value={sectionEdit.title}
+                        onChange={(e) => setSectionEdit((prev) => ({ ...prev, title: e.target.value }))}
+                        placeholder="Titolo sezione"
+                        required
+                      />
+
+                      <select
+                        className="w-full px-3 py-2 rounded-md bg-white/5 border border-white/10"
+                        value={sectionEdit.group}
+                        onChange={(e) => setSectionEdit((prev) => ({ ...prev, group: e.target.value }))}
+                      >
+                        {GROUP_OPTIONS.map((g) => (
+                          <option key={g.value} value={g.value}>
+                            {g.label}
+                          </option>
+                        ))}
+                      </select>
+
+                      <button
+                        type="submit"
+                        disabled={!selectedSection}
+                        className="w-full py-2 cursor-pointer rounded-md disabled:opacity-30 disabled:cursor-not-allowed"
+                        style={{ background: "var(--color-gold)", color: "var(--color-ink)" }}
+                      >
+                        Salva sezione
+                      </button>
+                    </form>
+                  </details>
 
                   <details className="mt-2">
                     <summary className="cursor-pointer text-sm" style={{ color: "var(--color-gold)" }}>
