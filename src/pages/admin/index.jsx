@@ -392,8 +392,8 @@ export default function AdminPage() {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-1 mb-3">
+        <div className="grid grid-cols-1 gap-4">
+          <div className="mb-3">
             <div className="bg-white/3 rounded-lg p-6 shadow-md">
               {!authOk ? (
                 <form onSubmit={tryLogin} className="space-y-4">
@@ -559,10 +559,10 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-2">
+          <div>
             {authOk ? (
               <div className="bg-white/3 rounded-lg p-6 shadow-md">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                   <div>
                     <h3 className="mb-3 font-semibold">Voci esistenti</h3>
 
