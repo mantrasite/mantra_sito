@@ -562,7 +562,7 @@ export default function AdminPage() {
           <div>
             {authOk ? (
               <div className="bg-white/3 rounded-lg p-6 shadow-md">
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div>
                     <h3 className="mb-3 font-semibold">Voci esistenti</h3>
 
